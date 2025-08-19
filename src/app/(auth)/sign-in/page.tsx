@@ -6,8 +6,8 @@ import SelectLanguage from "@/components/select-language";
 
 const SignIn = () => {
   return (
-    <Box className={styles.sign_in_container}>
-      <Box className={styles.container}>
+    <Box className={styles.container}>
+      <Box>
         <Box className={styles.intro}>
           <Box>
             <img src="/video.png" alt="Video" width={30} height={30} />
@@ -32,14 +32,13 @@ const SignIn = () => {
               />
             }
             component="button"
+            fullWidth
           >
             Continue with Google
           </Button>
         </Box>
       </Box>
-      <Box>
-        <SelectLanguage />
-      </Box>
+      <SelectLanguage />
     </Box>
   );
 };
