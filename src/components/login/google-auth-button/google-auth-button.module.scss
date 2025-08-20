@@ -1,0 +1,41 @@
+.googleAuthButtonContainer {
+  display: flex;
+  width: 100%;
+  max-width: 352px;
+  flex-direction: column;
+  gap: 16px;
+
+  > span:first-child {
+    color: var(--Neutral-Neutral-900, #212121);
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+.googleAuthButton {
+  display: flex;
+  width: 100%;
+  max-width: 300px;
+  padding: 11px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--Neutral-Neutral-500, #9e9e9e);
+  background: #fff;
+
+  @media screen and (max-width: 640px) {
+    max-width: 279px;
+    height: 42px;
+    border-radius: 4px;
+  }
+}
+
+.googleAuthButtonText {
+  color: rgba(0, 0, 0, 0.54);
+  text-align: center;
+  font-family: "Open Sans" !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 20px !important;
+}
