@@ -2,6 +2,8 @@
   "Login": {
     "title": "Login",
     "auth-text": "Continue with Google",
-    "company-description": "Academic Content Manager"
+    "company-description": "Academic Content Manager",
+    "success": "Login successful",
+    "error": "An error occurred"
   }
 }
