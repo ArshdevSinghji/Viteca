@@ -5,5 +5,21 @@
     "company-description": "Academic Content Manager",
     "success": "Login successful",
     "error": "An error occurred"
+  },
+
+  "Table": {
+    "preview": "Preview",
+    "title": "Title",
+    "type": "Type",
+    "duration": "Duration",
+    "language": "Language",
+    "translation": "Translation",
+    "creationDate": "Creation Date",
+    "placeholder": "Search by title or description",
+    "filters": "Filters"
+  },
+
+  "Dashboard": {
+    "title": "Dashboard Resources"
   }
 }

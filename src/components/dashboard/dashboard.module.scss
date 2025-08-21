@@ -1,0 +1,28 @@
+.dashboard {
+  display: flex;
+  padding: 32px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1 0 0;
+  align-self: stretch;
+  background: var(--Neutral-Neutral-100, #f5f5f5);
+  min-height: calc(100vh - 64px);
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 32px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  flex: 1 0 0;
+  align-self: stretch;
+  background-color: #fff;
+  border-radius: 8px;
+}

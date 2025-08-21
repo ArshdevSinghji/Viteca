@@ -1,0 +1,36 @@
+.tableContainer {
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.previewContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 10px 16px;
+  // background-color: red;
+}
+
+.previewImage {
+  // min-width: 168px;
+  // min-height: 94px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.tableTitle {
+  display: flex;
+  align-items: center;
+  height: 100%;
+
+  p {
+    line-height: normal;
+    text-wrap: wrap;
+  }
+}

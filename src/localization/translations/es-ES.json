@@ -5,5 +5,19 @@
     "company-description": "Administrador de Contenido Académico",
     "success": "Inicio de sesión exitoso",
     "error": "Ocurrió un error"
+  },
+  "Table": {
+    "preview": "Vista previa",
+    "title": "Título",
+    "type": "Tipo",
+    "duration": "Duración",
+    "language": "Idioma",
+    "translation": "Traducción",
+    "creationDate": "Fecha de creación",
+    "placeholder": "Buscar por título o descripción",
+    "filters": "Filtros"
+  },
+  "Dashboard": {
+    "title": "Recursos del Tablero"
   }
 }
