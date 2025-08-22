@@ -51,6 +51,7 @@ export default function ProfileMenu() {
             "aria-labelledby": "basic-button",
           },
         }}
+        disableScrollLock
         sx={{ borderRadius: "8px" }}
       >
         <MenuItem onClick={handleClose} className={styles.userDetails}>

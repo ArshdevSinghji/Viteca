@@ -1,0 +1,55 @@
+.mobileDashboardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobileDashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.preview {
+  position: relative;
+}
+
+.previewImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.previewChip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 8px !important;
+  font-weight: 600;
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+}
+
+.title {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 20px !important;
+  color: var(--neutral-neutral-800, #424242) !important;
+}
+
+.type {
+  color: var(--Neutral-Neutral-600, #757575) !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  line-height: 16px !important;
+}
+
+.creationDate {
+  color: var(--Neutral-Neutral-600, #757575) !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  line-height: 16px !important;
+}

@@ -1,3 +1,9 @@
+.searchBarContainer {
+  @media screen and (max-width: 720px) {
+    gap: 51px;
+  }
+}
+
 .searchBar {
   display: flex;
   flex-grow: 1;
@@ -14,7 +20,8 @@
   width: 100%;
 
   &::placeholder {
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 }

@@ -1,0 +1,36 @@
+.drawer {
+  border-top-left-radius: 15px !important;
+  border-top-right-radius: 15px !important;
+}
+
+.drawerContainer {
+  width: auto;
+  height: 100%;
+  padding: 26px 24px;
+}
+
+.drawerDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.drawerTitle {
+  color: var(--neutral-neutral-800, #424242);
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 20px !important;
+}
+
+.drawerBody {
+  color: var(--neutral-neutral-600, #757575);
+  font-size: 13px !important;
+  line-height: 18px !important;
+
+  span {
+    color: var(--neutral-neutral-800, #424242);
+
+    font-size: 11px !important;
+    line-height: 16px !important;
+  }
+}

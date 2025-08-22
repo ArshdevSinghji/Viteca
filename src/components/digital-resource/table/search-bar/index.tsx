@@ -10,7 +10,11 @@ import { useTranslations } from "next-intl";
 const SearchBar = () => {
   const t = useTranslations("Table");
   return (
-    <Stack direction="row" justifyContent="space-between">
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      className={styles.searchBarContainer}
+    >
       <Box className={styles.searchBar}>
         <IconButton>
           <svg

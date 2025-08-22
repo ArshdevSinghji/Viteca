@@ -7,9 +7,24 @@ import SearchBar from "./search-bar";
 
 import styles from "./table.module.scss";
 import { useTranslations } from "next-intl";
+import { useWindowSize } from "@/hooks/window-size/use-window-size.hook";
+import { useEffect, useState } from "react";
+import MobileDashboard from "../mobile-dashboard";
 
 const Table = () => {
   const t = useTranslations("Table");
+
+  const { width, height } = useWindowSize();
+
+  const [responsive, setResponsive] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (width < 720) {
+      setResponsive(true);
+    } else {
+      setResponsive(false);
+    }
+  }, [width, height]);
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
@@ -205,20 +220,24 @@ const Table = () => {
           width: "100%",
         }}
       >
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
+        {responsive ? (
+          <MobileDashboard rows={rows} />
+        ) : (
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
+                },
               },
-            },
-          }}
-          pageSizeOptions={[5, 15]}
-          disableRowSelectionOnClick
-          rowHeight={115}
-        />
+            }}
+            pageSizeOptions={[5, 15]}
+            disableRowSelectionOnClick
+            rowHeight={115}
+          />
+        )}
       </Box>
     </Box>
   );
