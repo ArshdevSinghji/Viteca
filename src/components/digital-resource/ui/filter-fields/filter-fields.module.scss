@@ -1,0 +1,26 @@
+.main {
+  flex-grow: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.select {
+  :global(.MuiOutlinedInput-root) {
+    font-size: 14px;
+    border-radius: 8px;
+  }
+}
+
+.chip {
+  font-size: 11px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 124px !important;
+  color: #424242 !important;
+}
+
+.tag {
+  color: red !important;
+}

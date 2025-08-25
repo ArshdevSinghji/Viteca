@@ -39,7 +39,20 @@
 
 .select {
   :global(.MuiOutlinedInput-root) {
-    color: #9e9e9e;
+    font-size: 14px;
     border-radius: 8px;
   }
+}
+
+.chip {
+  font-size: 11px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 124px !important;
+  color: #424242 !important;
+}
+
+.tag {
+  color: red !important;
 }

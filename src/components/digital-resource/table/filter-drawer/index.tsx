@@ -1,6 +1,8 @@
 import {
+  Autocomplete,
   Box,
   Button,
+  Checkbox,
   Drawer,
   MenuItem,
   Stack,
@@ -12,6 +14,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./filter-drawer.module.scss";
 import React from "react";
@@ -19,6 +23,8 @@ import React from "react";
 import { useWindowSize } from "@/hooks/window-size/use-window-size.hook";
 import { useEffect, useState } from "react";
 import MobileFilterDrawer from "../../mobile-dashboard/filter-drawer";
+import { cacheTag } from "next/dist/server/use-cache/cache-tag";
+import FilterFields from "../../ui/filter-fields/filter-fields";
 
 export default function FilterDrawer(props: {
   state: {
@@ -26,6 +32,8 @@ export default function FilterDrawer(props: {
   };
   toggleDrawer: any;
 }) {
+  const CATEGORY_LIMIT_SIZE = 1;
+
   const { state, toggleDrawer } = props;
   const { width } = useWindowSize();
 
@@ -34,6 +42,20 @@ export default function FilterDrawer(props: {
   useEffect(() => {
     setIsMobile(width < 480);
   }, [width]);
+
+  const category = [
+    {
+      label: "Course Presentation",
+      value: "Course Presentation",
+    },
+    {
+      label: "Program Presentation",
+      value: "Program Presentation",
+    },
+  ];
+
+  const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+  const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
   const list = (anchor: "right") => (
     <Box role="presentation" className={styles.drawer}>
@@ -49,7 +71,7 @@ export default function FilterDrawer(props: {
             />
           </Box>
 
-          <Box className={styles.main}>
+          {/* <Box className={styles.main}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
@@ -108,6 +130,7 @@ export default function FilterDrawer(props: {
               className={styles.select}
               fullWidth
             >
+              <MenuItem value="Published">Published</MenuItem>
               <MenuItem value="Draft">Draft</MenuItem>
             </TextField>
 
@@ -130,24 +153,72 @@ export default function FilterDrawer(props: {
               <MenuItem value="Draft">Draft</MenuItem>
             </TextField>
 
-            <TextField
-              select
-              variant="outlined"
-              label="Category"
+            <Autocomplete
+              multiple
+              limitTags={CATEGORY_LIMIT_SIZE}
               size="small"
-              slotProps={{
-                inputLabel: {
-                  sx: {
-                    fontSize: 14,
-                    color: " #9E9E9E",
-                  },
+              id="checkboxes-tags-demo"
+              options={category}
+              disableCloseOnSelect
+              getOptionLabel={(option) => option.label}
+              // renderValue={(selected) => {
+              //   if (selected.length > CATEGORY_LIMIT_SIZE) {
+              //     return (
+              //       <Chip
+              //         label={`+${selected.length - CATEGORY_LIMIT_SIZE}`}
+              //         className={styles.chip}
+              //         onDelete={() => console.log("delete")}
+              //         size="small"
+              //       />
+              //     );
+              //   }
+              //   return selected.map((value) => (
+              //     <Chip
+              //       key={value.label}
+              //       label={value.label}
+              //       className={styles.chip}
+              //       onDelete={() => console.log("delete")}
+              //     />
+              //   ));
+              // }}
+              renderOption={(props, option, { selected }) => {
+                const { key, ...optionProps } = props;
+                return (
+                  <li key={key} {...optionProps}>
+                    <Checkbox
+                      icon={icon}
+                      checkedIcon={checkedIcon}
+                      style={{ marginRight: 8 }}
+                      checked={selected}
+                    />
+                    {option.label}
+                  </li>
+                );
+              }}
+              sx={{
+                "& .MuiInputBase-root": {
+                  borderRadius: "8px",
                 },
               }}
-              className={styles.select}
-              fullWidth
-            >
-              <MenuItem value="Draft">Draft</MenuItem>
-            </TextField>
+              slotProps={{
+                chip: { className: styles.chip },
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Category"
+                  size="small"
+                  slotProps={{
+                    inputLabel: {
+                      sx: {
+                        fontSize: 14,
+                        color: " #9E9E9E",
+                      },
+                    },
+                  }}
+                />
+              )}
+            />
 
             <TextField
               select
@@ -205,7 +276,8 @@ export default function FilterDrawer(props: {
             >
               <MenuItem value="Draft">Draft</MenuItem>
             </TextField>
-          </Box>
+          </Box> */}
+          <FilterFields />
 
           <Box className={styles.button}>
             <Button variant="text" disabled>
