@@ -11,6 +11,11 @@
 .filter {
   padding: 32px 24px 16px 24px;
   height: 100%;
+
+  @media screen and (max-width: 480px) {
+    padding: 0 24px 24px 24px;
+    height: 100%;
+  }
 }
 
 .header {
@@ -26,33 +31,25 @@
   }
 }
 
-.main {
-  flex-grow: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.appBar {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  padding-right: 22px;
+  height: 56px;
+  background: var(--primary-primary-900, #01579b) !important;
+  color: #fff;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+  p {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 28px;
+    color: #fff;
+  }
 }
 
 .button {
   align-self: flex-end;
-}
-
-.select {
-  :global(.MuiOutlinedInput-root) {
-    font-size: 14px;
-    border-radius: 8px;
-  }
-}
-
-.chip {
-  font-size: 11px !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 124px !important;
-  color: #424242 !important;
-}
-
-.tag {
-  color: red !important;
 }

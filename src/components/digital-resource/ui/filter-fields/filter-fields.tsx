@@ -5,7 +5,6 @@ import {
   Chip,
   ClickAwayListener,
   MenuItem,
-  Paper,
   Popper,
   TextField,
 } from "@mui/material";
@@ -13,27 +12,109 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 import styles from "./filter-fields.module.scss";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useAppDispatch, useAppSelector } from "@/features/hooks";
+import {
+  setModality,
+  setSelectedAudioLanguages,
+  setSelectedAuthors,
+  setSelectedCategory,
+  setSelectedDate,
+  setSelectedSubtitleLanguages,
+  setStatus,
+  setSubject,
+  setTranslation,
+} from "@/features/filter/filter.slice";
+import { Dayjs } from "dayjs";
+import SearchField from "./search-field/search-field";
 
-interface FilterType {
-  label: string;
-  code?: string;
-}
+const category = [
+  {
+    label: "Course Presentation",
+  },
+  {
+    label: "Program Presentation",
+  },
+  {
+    label: "Advanced Course",
+  },
+  {
+    label: "Basic Training",
+  },
+];
+
+const author = [
+  {
+    label: "John Doe",
+  },
+  {
+    label: "Jane Smith",
+  },
+  {
+    label: "Emily Johnson",
+  },
+  {
+    label: "Michael Brown",
+  },
+];
+
+const audio = [
+  {
+    label: "English",
+    code: "en",
+  },
+  {
+    label: "Spanish",
+    code: "es",
+  },
+  {
+    label: "French",
+    code: "fr",
+  },
+  {
+    label: "German",
+    code: "de",
+  },
+];
+
+const subtitle = [
+  {
+    label: "English",
+    code: "en",
+  },
+  {
+    label: "Spanish",
+    code: "es",
+  },
+  {
+    label: "French",
+    code: "fr",
+  },
+  {
+    label: "German",
+    code: "de",
+  },
+];
 
 const FilterFields = () => {
-  const [selectedCategory, setSelectedCategory] = useState<FilterType[]>([]);
-  const [selectedAuthors, setSelectedAuthors] = useState<FilterType[]>([]);
-  const [selectedAudioLanguages, setSelectedAudioLanguages] = useState<
-    FilterType[]
-  >([]);
-  const [selectedSubtitleLanguages, setSelectedSubtitleLanguages] = useState<
-    FilterType[]
-  >([]);
+  const {
+    selectedCategory,
+    selectedAuthors,
+    selectedAudioLanguages,
+    selectedSubtitleLanguages,
+    selectedDate,
+    status,
+    subject,
+    translation,
+    modality,
+  } = useAppSelector((state) => state.filter);
+  const dispatch = useAppDispatch();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [label, setLabel] = useState("");
@@ -47,74 +128,6 @@ const FilterFields = () => {
 
   const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
   const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-  const category = [
-    {
-      label: "Course Presentation",
-    },
-    {
-      label: "Program Presentation",
-    },
-    {
-      label: "Advanced Course",
-    },
-    {
-      label: "Basic Training",
-    },
-  ];
-
-  const author = [
-    {
-      label: "John Doe",
-    },
-    {
-      label: "Jane Smith",
-    },
-    {
-      label: "Emily Johnson",
-    },
-    {
-      label: "Michael Brown",
-    },
-  ];
-
-  const audio = [
-    {
-      label: "English",
-      code: "en",
-    },
-    {
-      label: "Spanish",
-      code: "es",
-    },
-    {
-      label: "French",
-      code: "fr",
-    },
-    {
-      label: "German",
-      code: "de",
-    },
-  ];
-
-  const subtitle = [
-    {
-      label: "English",
-      code: "en",
-    },
-    {
-      label: "Spanish",
-      code: "es",
-    },
-    {
-      label: "French",
-      code: "fr",
-    },
-    {
-      label: "German",
-      code: "de",
-    },
-  ];
 
   const handleParentMouseEnter = (label: string) => {
     setLabel(label);
@@ -223,6 +236,8 @@ const FilterFields = () => {
                 },
               },
             }}
+            value={selectedDate}
+            onChange={(e: Dayjs | null) => dispatch(setSelectedDate(e))}
           />
         </DemoContainer>
       </LocalizationProvider>
@@ -240,7 +255,9 @@ const FilterFields = () => {
             },
           },
         }}
+        value={status}
         className={styles.select}
+        onChange={(e) => dispatch(setStatus(e.target.value))}
         fullWidth
       >
         <MenuItem value="Published">Published</MenuItem>
@@ -261,6 +278,8 @@ const FilterFields = () => {
           },
         }}
         className={styles.select}
+        value={subject}
+        onChange={(e) => dispatch(setSubject(e.target.value))}
         fullWidth
       >
         <MenuItem value="Draft">Draft</MenuItem>
@@ -277,18 +296,20 @@ const FilterFields = () => {
         value={selectedCategory}
         onChange={(event, newValue) => {
           const set = new Set(newValue.map((item) => item.label));
-          setSelectedCategory([...set].map((label) => ({ label })));
+          dispatch(setSelectedCategory([...set].map((label) => ({ label }))));
         }}
+        isOptionEqualToValue={(option, value) => option.label === value.label}
         getOptionLabel={(option) => option.label}
         renderOption={(props, option, { selected }) => {
           const { key, ...optionProps } = props;
           return (
-            <li key={key} {...optionProps}>
+            <li key={key} {...optionProps} className={styles.option}>
               <Checkbox
                 icon={icon}
                 checkedIcon={checkedIcon}
                 style={{ marginRight: 8 }}
                 checked={selected}
+                size="small"
               />
               {option.label}
             </li>
@@ -309,7 +330,9 @@ const FilterFields = () => {
               className={styles.tag}
               size="small"
               onDelete={() => {
-                setSelectedCategory(selectedCategory.slice(0, LIMIT_SIZE));
+                dispatch(
+                  setSelectedCategory(selectedCategory.slice(0, LIMIT_SIZE))
+                );
               }}
               onMouseEnter={(e) => handleMouseEnter(e, "Category")}
               onMouseLeave={() => handleMouseLeave("Category")}
@@ -369,13 +392,14 @@ const FilterFields = () => {
         value={selectedAuthors}
         onChange={(event, newValue) => {
           const set = new Set(newValue.map((item) => item.label));
-          setSelectedAuthors([...set].map((label) => ({ label })));
+          dispatch(setSelectedAuthors([...set].map((label) => ({ label }))));
         }}
+        isOptionEqualToValue={(option, value) => option.label === value.label}
         getOptionLabel={(option) => option.label}
         renderOption={(props, option, { selected }) => {
           const { key, ...optionProps } = props;
           return (
-            <li key={key} {...optionProps}>
+            <li key={key} {...optionProps} className={styles.option}>
               <Checkbox
                 icon={icon}
                 checkedIcon={checkedIcon}
@@ -401,7 +425,9 @@ const FilterFields = () => {
               className={styles.tag}
               size="small"
               onDelete={() => {
-                setSelectedAuthors(selectedAuthors.slice(0, LIMIT_SIZE));
+                dispatch(
+                  setSelectedAuthors(selectedAuthors.slice(0, LIMIT_SIZE))
+                );
               }}
               onMouseEnter={(e) => handleMouseEnter(e, "Author")}
               onMouseLeave={() => handleMouseLeave("Author")}
@@ -459,18 +485,22 @@ const FilterFields = () => {
         value={selectedAudioLanguages}
         onChange={(event, newValue) => {
           const set = new Set(newValue.map((item) => item.label));
-          setSelectedAudioLanguages([...set].map((label) => ({ label })));
+          dispatch(
+            setSelectedAudioLanguages([...set].map((label) => ({ label })))
+          );
         }}
+        isOptionEqualToValue={(option, value) => option.label === value.label}
         getOptionLabel={(option) => option.label}
         renderOption={(props, option, { selected }) => {
           const { key, ...optionProps } = props;
           return (
-            <li key={key} {...optionProps}>
+            <li key={key} {...optionProps} className={styles.option}>
               <Checkbox
                 icon={icon}
                 checkedIcon={checkedIcon}
                 style={{ marginRight: 8 }}
                 checked={selected}
+                size="small"
               />
               {option.label}
             </li>
@@ -491,8 +521,10 @@ const FilterFields = () => {
               className={styles.tag}
               size="small"
               onDelete={() => {
-                setSelectedAudioLanguages(
-                  selectedAudioLanguages.slice(0, LIMIT_SIZE)
+                dispatch(
+                  setSelectedAudioLanguages(
+                    selectedAudioLanguages.slice(0, LIMIT_SIZE)
+                  )
                 );
               }}
               onMouseEnter={(e) => handleMouseEnter(e, "Audio")}
@@ -556,9 +588,12 @@ const FilterFields = () => {
           },
         }}
         className={styles.select}
+        value={translation}
+        onChange={(e) => dispatch(setTranslation(e.target.value))}
         fullWidth
       >
-        <MenuItem value="Draft">Draft</MenuItem>
+        <MenuItem value="Draft">Human</MenuItem>
+        <MenuItem value="Final">Machine</MenuItem>
       </TextField>
 
       <TextField
@@ -575,6 +610,8 @@ const FilterFields = () => {
           },
         }}
         className={styles.select}
+        value={modality}
+        onChange={(e) => dispatch(setModality(e.target.value))}
         fullWidth
       >
         <MenuItem value="Draft">Presential</MenuItem>
@@ -591,13 +628,16 @@ const FilterFields = () => {
         value={selectedSubtitleLanguages}
         onChange={(event, newValue) => {
           const set = new Set(newValue.map((item) => item.label));
-          setSelectedSubtitleLanguages([...set].map((label) => ({ label })));
+          dispatch(
+            setSelectedSubtitleLanguages([...set].map((label) => ({ label })))
+          );
         }}
+        isOptionEqualToValue={(option, value) => option.label === value.label}
         getOptionLabel={(option) => option.label}
         renderOption={(props, option, { selected }) => {
           const { key, ...optionProps } = props;
           return (
-            <li key={key} {...optionProps}>
+            <li key={key} {...optionProps} className={styles.option}>
               <Checkbox
                 icon={icon}
                 checkedIcon={checkedIcon}
@@ -623,8 +663,10 @@ const FilterFields = () => {
               className={styles.tag}
               size="small"
               onDelete={() => {
-                setSelectedSubtitleLanguages(
-                  selectedSubtitleLanguages.slice(0, LIMIT_SIZE)
+                dispatch(
+                  setSelectedSubtitleLanguages(
+                    selectedSubtitleLanguages.slice(0, LIMIT_SIZE)
+                  )
                 );
               }}
               onMouseEnter={(e) => handleMouseEnter(e, "Subtitle")}
