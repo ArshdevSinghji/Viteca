@@ -2,22 +2,44 @@ import {
   Autocomplete,
   Box,
   Checkbox,
+  Chip,
+  ClickAwayListener,
   MenuItem,
+  Paper,
+  Popper,
   TextField,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { useState } from "react";
 
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import React from "react";
 
 import styles from "./filter-fields.module.scss";
+import { clearScreenDown } from "readline";
+
+interface FilterType {
+  label: string;
+}
 
 const FilterFields = () => {
-  const CATEGORY_LIMIT_SIZE = 1;
+  const [selectedCategories, setSelectedCategories] = useState<FilterType[]>(
+    []
+  );
+  const [selectedAuthors, setSelectedAuthors] = useState<FilterType[]>([]);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [label, setLabel] = useState("");
+
+  const [showCategory, setShowCategory] = useState(false);
+  const [showAuthor, setShowAuthor] = useState(false);
+  const [showAudio, setShowAudio] = useState(false);
+  const [showSubtitle, setShowSubtitle] = useState(false);
+
+  const LIMIT_SIZE = 1;
 
   const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
   const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -25,13 +47,104 @@ const FilterFields = () => {
   const category = [
     {
       label: "Course Presentation",
-      value: "Course Presentation",
     },
     {
       label: "Program Presentation",
-      value: "Program Presentation",
+    },
+    {
+      label: "Advanced Course",
+    },
+    {
+      label: "Basic Training",
     },
   ];
+
+  const author = [
+    {
+      label: "John Doe",
+    },
+    {
+      label: "Jane Smith",
+    },
+    {
+      label: "Emily Johnson",
+    },
+    {
+      label: "Michael Brown",
+    },
+  ];
+
+  const handleParentMouseEnter = (label: string) => {
+    console.log("label being set: ", label);
+    setLabel(label);
+  };
+
+  const handleParentMouseLeave = () => {
+    console.log("clearing label");
+    setLabel("");
+  };
+
+  const handleMouseEnter = (event: any, param: string) => {
+    console.log("Entering: ", param);
+    setAnchorEl(event.currentTarget);
+    switch (label) {
+      case "Category":
+        setShowCategory(true);
+        break;
+      case "Author":
+        setShowAuthor(true);
+        break;
+      case "Audio":
+        setShowAudio(true);
+        break;
+      case "Subtitle":
+        setShowSubtitle(true);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleMouseLeave = (param: string) => {
+    console.log("Leaving: ", param);
+    setAnchorEl(null);
+    switch (param) {
+      case "Category":
+        setShowCategory(false);
+        break;
+      case "Author":
+        setShowAuthor(false);
+        break;
+      case "Audio":
+        setShowAudio(false);
+        break;
+      case "Subtitle":
+        setShowSubtitle(false);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleClickAway = (param: string) => {
+    setAnchorEl(null);
+    switch (param) {
+      case "Category":
+        setShowCategory(false);
+        break;
+      case "Author":
+        setShowAuthor(false);
+        break;
+      case "Audio":
+        setShowAudio(false);
+        break;
+      case "Subtitle":
+        setShowSubtitle(false);
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <Box className={styles.main}>
@@ -116,34 +229,20 @@ const FilterFields = () => {
         <MenuItem value="Draft">Draft</MenuItem>
       </TextField>
 
+      {/* Category */}
       <Autocomplete
         multiple
-        limitTags={CATEGORY_LIMIT_SIZE}
+        limitTags={LIMIT_SIZE}
         size="small"
         id="checkboxes-tags-demo"
         options={category}
         disableCloseOnSelect
+        value={selectedCategories}
+        onChange={(event, newValue) => {
+          const set = new Set(newValue.map((item) => item.label));
+          setSelectedCategories([...set].map((label) => ({ label })));
+        }}
         getOptionLabel={(option) => option.label}
-        // renderValue={(selected) => {
-        //   if (selected.length > CATEGORY_LIMIT_SIZE) {
-        //     return (
-        //       <Chip
-        //         label={`+${selected.length - CATEGORY_LIMIT_SIZE}`}
-        //         className={styles.chip}
-        //         onDelete={() => console.log("delete")}
-        //         size="small"
-        //       />
-        //     );
-        //   }
-        //   return selected.map((value) => (
-        //     <Chip
-        //       key={value.label}
-        //       label={value.label}
-        //       className={styles.chip}
-        //       onDelete={() => console.log("delete")}
-        //     />
-        //   ));
-        // }}
         renderOption={(props, option, { selected }) => {
           const { key, ...optionProps } = props;
           return (
@@ -164,8 +263,45 @@ const FilterFields = () => {
           },
         }}
         slotProps={{
-          chip: { className: styles.chip },
+          chip: { size: "small", className: styles.chip },
         }}
+        getLimitTagsText={(more) => (
+          <Box>
+            <Chip
+              label={`+${more}`}
+              className={styles.tag}
+              size="small"
+              onDelete={() => {
+                setSelectedCategories(selectedCategories.slice(0, LIMIT_SIZE));
+              }}
+              onMouseEnter={(e) => handleMouseEnter(e, "Category")}
+              onMouseLeave={() => handleMouseLeave("Category")}
+              sx={{ cursor: "pointer" }}
+            />
+
+            <Popper
+              open={showCategory}
+              anchorEl={anchorEl}
+              placement="bottom"
+              style={{ zIndex: 1600 }}
+            >
+              <ClickAwayListener
+                onClickAway={() => handleClickAway("Category")}
+              >
+                <Box className={styles.popper}>
+                  {selectedCategories.slice(LIMIT_SIZE).map((value, index) => (
+                    <Chip
+                      key={index}
+                      label={value.label}
+                      className={styles.tag}
+                      size="small"
+                    />
+                  ))}
+                </Box>
+              </ClickAwayListener>
+            </Popper>
+          </Box>
+        )}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -179,6 +315,98 @@ const FilterFields = () => {
                 },
               },
             }}
+            onMouseEnter={() => handleParentMouseEnter("Category")}
+            onMouseLeave={handleParentMouseLeave}
+          />
+        )}
+      />
+
+      {/* Authors */}
+      <Autocomplete
+        multiple
+        limitTags={LIMIT_SIZE}
+        size="small"
+        id="checkboxes-tags-demo"
+        options={author}
+        disableCloseOnSelect
+        value={selectedAuthors}
+        onChange={(event, newValue) => {
+          const set = new Set(newValue.map((item) => item.label));
+          setSelectedAuthors([...set].map((label) => ({ label })));
+        }}
+        getOptionLabel={(option) => option.label}
+        renderOption={(props, option, { selected }) => {
+          const { key, ...optionProps } = props;
+          return (
+            <li key={key} {...optionProps}>
+              <Checkbox
+                icon={icon}
+                checkedIcon={checkedIcon}
+                style={{ marginRight: 8 }}
+                checked={selected}
+              />
+              {option.label}
+            </li>
+          );
+        }}
+        sx={{
+          "& .MuiInputBase-root": {
+            borderRadius: "8px",
+          },
+        }}
+        slotProps={{
+          chip: { size: "small", className: styles.chip },
+        }}
+        getLimitTagsText={(more) => (
+          <Box>
+            <Chip
+              label={`+${more}`}
+              className={styles.tag}
+              size="small"
+              onDelete={() => {
+                setSelectedAuthors(selectedAuthors.slice(0, LIMIT_SIZE));
+              }}
+              onMouseEnter={(e) => handleMouseEnter(e, "Author")}
+              onMouseLeave={() => handleMouseLeave("Author")}
+              sx={{ cursor: "pointer" }}
+            />
+
+            <Popper
+              open={showAuthor}
+              anchorEl={anchorEl}
+              placement="bottom"
+              style={{ zIndex: 1600 }}
+            >
+              <ClickAwayListener onClickAway={() => handleClickAway("Author")}>
+                <Box className={styles.popper}>
+                  {selectedAuthors.slice(LIMIT_SIZE).map((value, index) => (
+                    <Chip
+                      key={index}
+                      label={value.label}
+                      className={styles.tag}
+                      size="small"
+                    />
+                  ))}
+                </Box>
+              </ClickAwayListener>
+            </Popper>
+          </Box>
+        )}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Author"
+            size="small"
+            slotProps={{
+              inputLabel: {
+                sx: {
+                  fontSize: 14,
+                  color: " #9E9E9E",
+                },
+              },
+            }}
+            onMouseEnter={() => handleParentMouseEnter("Author")}
+            onMouseLeave={() => handleParentMouseLeave()}
           />
         )}
       />

@@ -37,7 +37,7 @@ export default function ProfileMenu() {
         <Box className={styles.icon}>
           <AccountCircleIcon />
         </Box>
-        <Typography className={styles.title}>Translations</Typography>
+        <Typography className={styles.title}>Admin</Typography>
         <KeyboardArrowDownIcon />
       </Stack>
 
@@ -55,11 +55,9 @@ export default function ProfileMenu() {
         sx={{ borderRadius: "8px" }}
       >
         <MenuItem onClick={handleClose} className={styles.userDetails}>
-          <Typography>Translations</Typography>
-          <Tooltip title="Translations123@gmail.com">
-            <Typography className={styles.email}>
-              Translations123@gmail.com
-            </Typography>
+          <Typography>Admin</Typography>
+          <Tooltip title="Admin123@admin.com">
+            <Typography className={styles.email}>Admin123@admin.com</Typography>
           </Tooltip>
         </MenuItem>
         <Divider />
