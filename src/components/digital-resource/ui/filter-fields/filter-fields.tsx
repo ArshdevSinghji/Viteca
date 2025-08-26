@@ -19,17 +19,21 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 import styles from "./filter-fields.module.scss";
-import { clearScreenDown } from "readline";
 
 interface FilterType {
   label: string;
+  code?: string;
 }
 
 const FilterFields = () => {
-  const [selectedCategories, setSelectedCategories] = useState<FilterType[]>(
-    []
-  );
+  const [selectedCategory, setSelectedCategory] = useState<FilterType[]>([]);
   const [selectedAuthors, setSelectedAuthors] = useState<FilterType[]>([]);
+  const [selectedAudioLanguages, setSelectedAudioLanguages] = useState<
+    FilterType[]
+  >([]);
+  const [selectedSubtitleLanguages, setSelectedSubtitleLanguages] = useState<
+    FilterType[]
+  >([]);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [label, setLabel] = useState("");
@@ -74,18 +78,53 @@ const FilterFields = () => {
     },
   ];
 
+  const audio = [
+    {
+      label: "English",
+      code: "en",
+    },
+    {
+      label: "Spanish",
+      code: "es",
+    },
+    {
+      label: "French",
+      code: "fr",
+    },
+    {
+      label: "German",
+      code: "de",
+    },
+  ];
+
+  const subtitle = [
+    {
+      label: "English",
+      code: "en",
+    },
+    {
+      label: "Spanish",
+      code: "es",
+    },
+    {
+      label: "French",
+      code: "fr",
+    },
+    {
+      label: "German",
+      code: "de",
+    },
+  ];
+
   const handleParentMouseEnter = (label: string) => {
-    console.log("label being set: ", label);
     setLabel(label);
   };
 
   const handleParentMouseLeave = () => {
-    console.log("clearing label");
     setLabel("");
   };
 
   const handleMouseEnter = (event: any, param: string) => {
-    console.log("Entering: ", param);
     setAnchorEl(event.currentTarget);
     switch (label) {
       case "Category":
@@ -106,7 +145,6 @@ const FilterFields = () => {
   };
 
   const handleMouseLeave = (param: string) => {
-    console.log("Leaving: ", param);
     setAnchorEl(null);
     switch (param) {
       case "Category":
@@ -178,7 +216,6 @@ const FilterFields = () => {
                   sx: {
                     fontSize: 14,
                     borderRadius: "8px",
-                    color: " #9E9E9E",
                   },
                 },
                 InputLabelProps: {
@@ -237,10 +274,10 @@ const FilterFields = () => {
         id="checkboxes-tags-demo"
         options={category}
         disableCloseOnSelect
-        value={selectedCategories}
+        value={selectedCategory}
         onChange={(event, newValue) => {
           const set = new Set(newValue.map((item) => item.label));
-          setSelectedCategories([...set].map((label) => ({ label })));
+          setSelectedCategory([...set].map((label) => ({ label })));
         }}
         getOptionLabel={(option) => option.label}
         renderOption={(props, option, { selected }) => {
@@ -272,7 +309,7 @@ const FilterFields = () => {
               className={styles.tag}
               size="small"
               onDelete={() => {
-                setSelectedCategories(selectedCategories.slice(0, LIMIT_SIZE));
+                setSelectedCategory(selectedCategory.slice(0, LIMIT_SIZE));
               }}
               onMouseEnter={(e) => handleMouseEnter(e, "Category")}
               onMouseLeave={() => handleMouseLeave("Category")}
@@ -289,7 +326,7 @@ const FilterFields = () => {
                 onClickAway={() => handleClickAway("Category")}
               >
                 <Box className={styles.popper}>
-                  {selectedCategories.slice(LIMIT_SIZE).map((value, index) => (
+                  {selectedCategory.slice(LIMIT_SIZE).map((value, index) => (
                     <Chip
                       key={index}
                       label={value.label}
@@ -316,7 +353,7 @@ const FilterFields = () => {
               },
             }}
             onMouseEnter={() => handleParentMouseEnter("Category")}
-            onMouseLeave={handleParentMouseLeave}
+            onMouseLeave={() => handleParentMouseLeave()}
           />
         )}
       />
@@ -411,24 +448,99 @@ const FilterFields = () => {
         )}
       />
 
-      <TextField
-        select
-        variant="outlined"
-        label="Audio Language"
+      {/* Audio Language */}
+      <Autocomplete
+        multiple
+        limitTags={LIMIT_SIZE}
         size="small"
-        slotProps={{
-          inputLabel: {
-            sx: {
-              fontSize: 14,
-              color: " #9E9E9E",
-            },
+        id="checkboxes-tags-demo"
+        options={audio}
+        disableCloseOnSelect
+        value={selectedAudioLanguages}
+        onChange={(event, newValue) => {
+          const set = new Set(newValue.map((item) => item.label));
+          setSelectedAudioLanguages([...set].map((label) => ({ label })));
+        }}
+        getOptionLabel={(option) => option.label}
+        renderOption={(props, option, { selected }) => {
+          const { key, ...optionProps } = props;
+          return (
+            <li key={key} {...optionProps}>
+              <Checkbox
+                icon={icon}
+                checkedIcon={checkedIcon}
+                style={{ marginRight: 8 }}
+                checked={selected}
+              />
+              {option.label}
+            </li>
+          );
+        }}
+        sx={{
+          "& .MuiInputBase-root": {
+            borderRadius: "8px",
           },
         }}
-        className={styles.select}
-        fullWidth
-      >
-        <MenuItem value="Draft">Draft</MenuItem>
-      </TextField>
+        slotProps={{
+          chip: { size: "small", className: styles.chip },
+        }}
+        getLimitTagsText={(more) => (
+          <Box>
+            <Chip
+              label={`+${more}`}
+              className={styles.tag}
+              size="small"
+              onDelete={() => {
+                setSelectedAudioLanguages(
+                  selectedAudioLanguages.slice(0, LIMIT_SIZE)
+                );
+              }}
+              onMouseEnter={(e) => handleMouseEnter(e, "Audio")}
+              onMouseLeave={() => handleMouseLeave("Audio")}
+              sx={{ cursor: "pointer" }}
+            />
+
+            <Popper
+              open={showAudio}
+              anchorEl={anchorEl}
+              placement="bottom"
+              style={{ zIndex: 1600 }}
+            >
+              <ClickAwayListener onClickAway={() => handleClickAway("Audio")}>
+                <Box className={styles.popper}>
+                  {selectedAudioLanguages
+                    .slice(LIMIT_SIZE)
+                    .map((value, index) => (
+                      <Chip
+                        key={index}
+                        label={value.label}
+                        className={styles.tag}
+                        size="small"
+                      />
+                    ))}
+                </Box>
+              </ClickAwayListener>
+            </Popper>
+          </Box>
+        )}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Audio Language"
+            size="small"
+            slotProps={{
+              inputLabel: {
+                sx: {
+                  fontSize: 14,
+                  color: " #9E9E9E",
+                },
+              },
+            }}
+            onMouseEnter={() => handleParentMouseEnter("Audio")}
+            onMouseLeave={() => handleParentMouseLeave()}
+          />
+        )}
+      />
 
       <TextField
         select
@@ -452,7 +564,7 @@ const FilterFields = () => {
       <TextField
         select
         variant="outlined"
-        label="Subtitle Languages"
+        label="Modality"
         size="small"
         slotProps={{
           inputLabel: {
@@ -465,8 +577,104 @@ const FilterFields = () => {
         className={styles.select}
         fullWidth
       >
-        <MenuItem value="Draft">Draft</MenuItem>
+        <MenuItem value="Draft">Presential</MenuItem>
       </TextField>
+
+      {/* Subtitle Languages */}
+      <Autocomplete
+        multiple
+        limitTags={LIMIT_SIZE}
+        size="small"
+        id="checkboxes-tags-demo"
+        options={subtitle}
+        disableCloseOnSelect
+        value={selectedSubtitleLanguages}
+        onChange={(event, newValue) => {
+          const set = new Set(newValue.map((item) => item.label));
+          setSelectedSubtitleLanguages([...set].map((label) => ({ label })));
+        }}
+        getOptionLabel={(option) => option.label}
+        renderOption={(props, option, { selected }) => {
+          const { key, ...optionProps } = props;
+          return (
+            <li key={key} {...optionProps}>
+              <Checkbox
+                icon={icon}
+                checkedIcon={checkedIcon}
+                style={{ marginRight: 8 }}
+                checked={selected}
+              />
+              {option.label}
+            </li>
+          );
+        }}
+        sx={{
+          "& .MuiInputBase-root": {
+            borderRadius: "8px",
+          },
+        }}
+        slotProps={{
+          chip: { size: "small", className: styles.chip },
+        }}
+        getLimitTagsText={(more) => (
+          <Box>
+            <Chip
+              label={`+${more}`}
+              className={styles.tag}
+              size="small"
+              onDelete={() => {
+                setSelectedSubtitleLanguages(
+                  selectedSubtitleLanguages.slice(0, LIMIT_SIZE)
+                );
+              }}
+              onMouseEnter={(e) => handleMouseEnter(e, "Subtitle")}
+              onMouseLeave={() => handleMouseLeave("Subtitle")}
+              sx={{ cursor: "pointer" }}
+            />
+
+            <Popper
+              open={showSubtitle}
+              anchorEl={anchorEl}
+              placement="bottom"
+              style={{ zIndex: 1600 }}
+            >
+              <ClickAwayListener
+                onClickAway={() => handleClickAway("Subtitle")}
+              >
+                <Box className={styles.popper}>
+                  {selectedSubtitleLanguages
+                    .slice(LIMIT_SIZE)
+                    .map((value, index) => (
+                      <Chip
+                        key={index}
+                        label={value.label}
+                        className={styles.tag}
+                        size="small"
+                      />
+                    ))}
+                </Box>
+              </ClickAwayListener>
+            </Popper>
+          </Box>
+        )}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Subtitle Languages"
+            size="small"
+            slotProps={{
+              inputLabel: {
+                sx: {
+                  fontSize: 14,
+                  color: " #9E9E9E",
+                },
+              },
+            }}
+            onMouseEnter={() => handleParentMouseEnter("Subtitle")}
+            onMouseLeave={() => handleParentMouseLeave()}
+          />
+        )}
+      />
     </Box>
   );
 };
