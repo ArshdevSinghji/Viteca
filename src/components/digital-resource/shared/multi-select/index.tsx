@@ -56,6 +56,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       limitTags={LIMIT_SIZE}
       size="small"
       id="checkboxes-tags-demo"
+      openOnFocus={false}
       options={options}
       disableCloseOnSelect
       value={selectedValue}
@@ -138,8 +139,6 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
               },
             },
           }}
-          //   onMouseEnter={() => handleParentMouseEnter(label)}
-          //   onMouseLeave={() => handleParentMouseLeave()}
         />
       )}
     />

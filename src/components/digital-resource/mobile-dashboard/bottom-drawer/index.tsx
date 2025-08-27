@@ -27,16 +27,24 @@ export default function AnchorTemporaryDrawer(props: {
             {selectedRow.title}
           </Typography>
           <Typography className={styles.drawerBody}>
-            Type: <Chip label={selectedRow.type} size="small" />
+            <Box>
+              Type: <Chip label={selectedRow.type} size="small" />
+            </Box>
           </Typography>
           <Typography className={styles.drawerBody}>
-            Duration: <Chip label={selectedRow.duration} size="small" />
+            <Box>
+              Duration: <Chip label={selectedRow.duration} size="small" />
+            </Box>
           </Typography>
           <Typography className={styles.drawerBody}>
-            Language: <Chip label={selectedRow.language} size="small" />
+            <Box>
+              Language: <Chip label={selectedRow.language} size="small" />
+            </Box>
           </Typography>
           <Typography className={styles.drawerBody}>
-            Translation: <Chip label={selectedRow.translation} size="small" />
+            <Box>
+              Translation: <Chip label={selectedRow.translation} size="small" />
+            </Box>
           </Typography>
           <Typography className={styles.drawerBody}>
             Creation Date: {selectedRow.creationDate}

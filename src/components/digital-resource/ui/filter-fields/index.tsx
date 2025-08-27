@@ -125,7 +125,7 @@ const FilterFields = () => {
             },
           },
         }}
-        value={status}
+        value={status || ""}
         className={styles.select}
         onChange={(e) => dispatch(setStatus(e.target.value))}
         fullWidth
@@ -166,7 +166,7 @@ const FilterFields = () => {
           },
         }}
         className={styles.select}
-        value={translation}
+        value={translation || ""}
         onChange={(e) => dispatch(setTranslation(e.target.value))}
         fullWidth
       >
@@ -188,7 +188,7 @@ const FilterFields = () => {
           },
         }}
         className={styles.select}
-        value={modality}
+        value={modality || ""}
         onChange={(e) => dispatch(setModality(e.target.value))}
         fullWidth
       >
