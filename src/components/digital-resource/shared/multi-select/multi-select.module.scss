@@ -1,0 +1,30 @@
+.option {
+  font-size: 12px !important;
+  color: #424242 !important;
+}
+
+.chip {
+  font-size: 11px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 124px !important;
+  color: #424242 !important;
+  margin-right: 8px !important;
+}
+
+.tag {
+  font-size: 11px !important;
+  color: #424242 !important;
+}
+
+.popper {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 16px;
+  gap: 8px;
+  border-radius: 8px;
+  background: var(--Neutral-Neutral-50, #fafafa);
+  box-shadow: 0 2px 8px 3px rgba(51, 51, 51, 0.15);
+  max-width: 291px;
+}

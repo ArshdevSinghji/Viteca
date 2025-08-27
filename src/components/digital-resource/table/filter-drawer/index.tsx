@@ -1,6 +1,6 @@
 import { AppBar, Box, Button, Drawer, Stack, Typography } from "@mui/material";
 
-import FilterFields from "../../ui/filter-fields/filter-fields";
+import FilterFields from "../../ui/filter-fields";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./filter-drawer.module.scss";
 import React from "react";

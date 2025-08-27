@@ -1,4 +1,4 @@
 export interface FilterType {
-  label: string;
-  code?: string;
+  key: string;
+  value?: string;
 }

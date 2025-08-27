@@ -5,11 +5,11 @@ import { Dayjs } from "dayjs";
 const initialState = {
   selectedCategory: [] as FilterType[],
   selectedAuthors: [] as FilterType[],
-  selectedAudioLanguages: [] as FilterType[],
   selectedSubtitleLanguages: [] as FilterType[],
+  selectedAudioLanguages: null as FilterType | null,
+  selectedSubject: null as FilterType | null,
   selectedDate: null as Dayjs | null,
   status: null as string | null,
-  subject: null as string | null,
   translation: null as string | null,
   modality: null as string | null,
 };
@@ -24,7 +24,7 @@ const filterSlice = createSlice({
     setSelectedAuthors(state, action: PayloadAction<FilterType[]>) {
       state.selectedAuthors = action.payload;
     },
-    setSelectedAudioLanguages(state, action: PayloadAction<FilterType[]>) {
+    setSelectedAudioLanguages(state, action: PayloadAction<FilterType | null>) {
       state.selectedAudioLanguages = action.payload;
     },
     setSelectedSubtitleLanguages(state, action: PayloadAction<FilterType[]>) {
@@ -36,8 +36,8 @@ const filterSlice = createSlice({
     setStatus(state, action: PayloadAction<string>) {
       state.status = action.payload;
     },
-    setSubject(state, action: PayloadAction<string | null>) {
-      state.subject = action.payload;
+    setSelectedSubject(state, action: PayloadAction<FilterType | null>) {
+      state.selectedSubject = action.payload;
     },
     setTranslation(state, action: PayloadAction<string | null>) {
       state.translation = action.payload;
@@ -55,7 +55,7 @@ export const {
   setSelectedSubtitleLanguages,
   setSelectedDate,
   setStatus,
-  setSubject,
+  setSelectedSubject,
   setTranslation,
   setModality,
 } = filterSlice.actions;
