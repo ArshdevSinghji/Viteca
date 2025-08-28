@@ -258,6 +258,12 @@ const Table = () => {
                 {
                   color: "#424242 !important",
                 },
+              "& .MuiDataGrid-columnHeader:focus": {
+                outline: " none",
+              },
+              "& .MuiDataGrid-cell:focus": {
+                outline: " none",
+              },
             }}
             pageSizeOptions={[5, 15]}
             disableRowSelectionOnClick

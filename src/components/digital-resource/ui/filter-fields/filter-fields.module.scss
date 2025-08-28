@@ -5,6 +5,11 @@
   gap: 16px;
 }
 
+.menuItems {
+  font-size: 14px !important;
+  color: #424242 !important;
+}
+
 .select {
   :global(.MuiOutlinedInput-root) {
     font-size: 14px;

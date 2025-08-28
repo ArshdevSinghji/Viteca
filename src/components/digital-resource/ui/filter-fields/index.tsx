@@ -147,7 +147,9 @@ const FilterFields = () => {
         fullWidth
       >
         <MenuItem value="Published">Published</MenuItem>
-        <MenuItem value="Draft">Draft</MenuItem>
+        <MenuItem value="Draft" className={styles.menuItem}>
+          Draft
+        </MenuItem>
       </TextField>
 
       <MultiSelectSubjectInfiniteScroll />
