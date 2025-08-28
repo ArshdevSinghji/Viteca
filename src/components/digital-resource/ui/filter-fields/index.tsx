@@ -6,6 +6,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useState } from "react";
 
 import styles from "./filter-fields.module.scss";
+import CloseIcon from "@mui/icons-material/Close";
+
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import {
   setModality,
@@ -102,6 +104,16 @@ const FilterFields = () => {
                     fontSize: 14,
                     borderRadius: "8px",
                   },
+                  endAdornment: dateValue ? (
+                    <CloseIcon
+                      sx={{
+                        fontSize: "20px",
+                        color: "#424242",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => dispatch(setSelectedDate(null))}
+                    />
+                  ) : null,
                 },
                 InputLabelProps: {
                   sx: { fontSize: 14, color: " #9E9E9E" },
