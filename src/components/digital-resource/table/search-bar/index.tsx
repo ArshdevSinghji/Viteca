@@ -3,6 +3,7 @@
 import { Box, Button, IconButton, InputBase, Stack } from "@mui/material";
 
 import FilterListIcon from "@mui/icons-material/FilterList";
+import CloseIcon from "@mui/icons-material/Close";
 
 import styles from "./search-bar.module.scss";
 import { useTranslations } from "next-intl";
@@ -16,6 +17,8 @@ const SearchBar = () => {
   const [state, setState] = useState({
     right: false,
   });
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
@@ -58,7 +61,27 @@ const SearchBar = () => {
             id="search-input"
             name="search"
             placeholder={t("placeholder")}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className={styles.input}
+            endAdornment={
+              searchTerm && (
+                <CloseIcon
+                  onClick={() => setSearchTerm("")}
+                  sx={{
+                    fontSize: "20px",
+                    color: "#424242",
+                    cursor: "pointer",
+                    ml: 1,
+                    "&:hover": {
+                      backgroundColor: "#f2f2f2",
+                      borderRadius: "50%",
+                      transition: "background-color 0.3s",
+                    },
+                  }}
+                />
+              )
+            }
           />
         </Box>
         <Button
