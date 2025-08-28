@@ -1,4 +1,5 @@
 import Navbar from "@/components/app-bar";
+import { Box, Stack } from "@mui/material";
 
 export default async function RootLayout({
   children,
@@ -6,9 +7,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <Stack height={"100vh"}>
       <Navbar />
-      {children}
-    </>
+      <Box flexGrow={2}>{children}</Box>
+    </Stack>
   );
 }
