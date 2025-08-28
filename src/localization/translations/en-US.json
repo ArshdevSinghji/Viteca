@@ -16,7 +16,8 @@
     "translation": "Translation",
     "creationDate": "Creation Date",
     "placeholder": "Search by title or description",
-    "filters": "Filters"
+    "filters": "Filters",
+    "authors": "Authors"
   },
 
   "Dashboard": {

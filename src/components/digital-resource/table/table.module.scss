@@ -11,7 +11,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 10px 16px;
+  padding: 10px 6px;
   // background-color: red;
 }
 
@@ -24,13 +24,20 @@
   border-radius: 8px;
 }
 
-.tableTitle {
+.text {
   display: flex;
   align-items: center;
   height: 100%;
 
   p {
+    font-size: 14px !important;
+    color: #424242 !important;
     line-height: normal;
     text-wrap: wrap;
   }
+}
+
+.chip {
+  font-size: 11px !important;
+  color: #424242 !important;
 }

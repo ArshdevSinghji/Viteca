@@ -1,0 +1,20 @@
+.authorsContainer {
+  display: flex;
+  align-items: center;
+  padding: 6px 6px;
+  height: 100%;
+}
+
+.authorsInnerContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip {
+  font-size: 11px !important;
+  color: #424242 !important;
+}

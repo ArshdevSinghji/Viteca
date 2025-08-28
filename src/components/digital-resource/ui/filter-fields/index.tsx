@@ -13,7 +13,7 @@ import {
   setStatus,
   setTranslation,
 } from "@/features/filter/filter.slice";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 import MultiSelectCategory from "../../table/filter-drawer/category";
 import MultiSelectAuthor from "../../table/filter-drawer/author";
@@ -32,6 +32,8 @@ const FilterFields = () => {
   const [showCategory, setShowCategory] = useState(false);
   const [showAuthor, setShowAuthor] = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(false);
+
+  const dateValue = selectedDate ? dayjs(selectedDate) : null;
 
   const handleMouseEnter = (event: any, param: string) => {
     setAnchorEl(event.currentTarget);
@@ -106,8 +108,10 @@ const FilterFields = () => {
                 },
               },
             }}
-            value={selectedDate}
-            onChange={(e: Dayjs | null) => dispatch(setSelectedDate(e))}
+            value={dateValue}
+            onChange={(e: Dayjs | null) =>
+              dispatch(setSelectedDate(e ? e.toISOString() : null))
+            }
           />
         </DemoContainer>
       </LocalizationProvider>

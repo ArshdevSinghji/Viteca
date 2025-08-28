@@ -8,7 +8,7 @@ const initialState = {
   selectedSubtitleLanguages: [] as FilterType[],
   selectedAudioLanguages: null as FilterType | null,
   selectedSubject: null as FilterType | null,
-  selectedDate: null as Dayjs | null,
+  selectedDate: null as string | null,
   status: null as string | null,
   translation: null as string | null,
   modality: null as string | null,
@@ -30,7 +30,7 @@ const filterSlice = createSlice({
     setSelectedSubtitleLanguages(state, action: PayloadAction<FilterType[]>) {
       state.selectedSubtitleLanguages = action.payload;
     },
-    setSelectedDate(state, action: PayloadAction<Dayjs | null>) {
+    setSelectedDate(state, action: PayloadAction<string | null>) {
       state.selectedDate = action.payload;
     },
     setStatus(state, action: PayloadAction<string>) {

@@ -15,7 +15,8 @@
     "translation": "Traducción",
     "creationDate": "Fecha de creación",
     "placeholder": "Buscar por título o descripción",
-    "filters": "Filtros"
+    "filters": "Filtros",
+    "authors": "Autores"
   },
   "Dashboard": {
     "title": "Recursos del Tablero"
