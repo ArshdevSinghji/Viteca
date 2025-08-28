@@ -1,18 +1,17 @@
 "use client";
 
-import { Box, Chip, Tooltip, Typography } from "@mui/material";
+import { Box, Chip, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 
 import SearchBar from "./search-bar";
-
 import styles from "./table.module.scss";
+
 import { useTranslations } from "next-intl";
 import { useWindowSize } from "@/hooks/window-size/use-window-size.hook";
 import { useEffect, useState } from "react";
-import MobileDashboard from "../mobile-dashboard";
-import AuthorCell from "./author-cell";
 
-const LIMIT = 2;
+import AuthorCell from "./author-cell";
+import MobileDashboard from "../mobile-dashboard";
 
 const Table = () => {
   const t = useTranslations("Table");
@@ -20,6 +19,7 @@ const Table = () => {
   const { width, height } = useWindowSize();
 
   const [responsive, setResponsive] = useState<boolean>(false);
+  const [hoveredRowId, setHoveredRowId] = useState<number | null>(null);
 
   useEffect(() => {
     if (width < 480) {
@@ -38,13 +38,29 @@ const Table = () => {
       editable: false,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
+        const isHovered = hoveredRowId === params.row.id;
+
         return (
-          <Box className={styles.previewContainer}>
-            <img
-              src={params.row.preview}
-              alt="Preview"
-              className={styles.previewImage}
-            />
+          <Box
+            className={styles.previewContainer}
+            onMouseOver={() => setHoveredRowId(params.row.id)}
+            onMouseOut={() => setHoveredRowId(null)}
+          >
+            {isHovered && params.row.video ? (
+              <video
+                src={params.row.video}
+                autoPlay
+                muted
+                loop
+                className={styles.previewImage}
+              />
+            ) : (
+              <img
+                src={params.row.preview}
+                alt="Preview"
+                className={styles.previewImage}
+              />
+            )}
           </Box>
         );
       },
@@ -136,6 +152,7 @@ const Table = () => {
     {
       id: 1,
       preview: "/preview.png",
+      video: "/random-video.mp4",
       title: "Academic Management System: Academic Monitoring",
       type: "Interactive expository session",
       authors: [
