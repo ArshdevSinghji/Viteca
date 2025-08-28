@@ -1,6 +1,5 @@
 import {
   Box,
-  Checkbox,
   Chip,
   FormControl,
   IconButton,
@@ -97,6 +96,10 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
                   key={value.key}
                   label={value.value}
                   size="small"
+                  sx={{
+                    fontSize: "11px",
+                    color: "#424242",
+                  }}
                   onDelete={() => {
                     onDelete(value);
                   }}
@@ -251,13 +254,11 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
                           data-test-id={`text-infinite-scroll-${option.key}-menu-${label}`}
                           sx={{
                             maxWidth: "fit-content",
-                            height: "44px !important",
                             fontSize: "14px !important",
                             whiteSpace: "nowrap !important",
                             overflow: "hidden !important",
                             textOverflow: "ellipsis !important",
                             flexGrow: 1,
-                            padding: "12px 16px 12px 0px !important",
                           }}
                         >
                           {option.value}
