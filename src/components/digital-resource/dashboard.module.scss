@@ -13,6 +13,12 @@
   @media screen and (max-width: 720px) {
     padding: 16px;
   }
+
+  @media screen and (max-width: 480px) {
+    height: auto;
+    min-height: calc(100vh - 64px);
+    overflow: visible;
+  }
 }
 
 .title {
@@ -33,4 +39,9 @@
   border-radius: 8px;
   min-height: 0;
   overflow: hidden;
+
+  @media screen and (max-width: 480px) {
+    overflow: visible;
+    min-height: auto;
+  }
 }

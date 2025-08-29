@@ -1,11 +1,17 @@
+.appBarContainer {
+  z-index: 1300;
+
+  @media screen and (max-width: 480px) {
+    z-index: 999;
+  }
+}
+
 .appBar {
   background-color: #01579b !important;
   padding: 0 32px;
-  z-index: 1300 !important;
 
   @media screen and (max-width: 480px) {
     padding: 0 16px;
-    z-index: 1200 !important;
   }
 }
 

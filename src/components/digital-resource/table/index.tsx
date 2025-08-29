@@ -266,6 +266,9 @@ const Table = () => {
               "& .MuiDataGrid-cell:focus": {
                 outline: " none",
               },
+              "& .MuiDataGrid-scrollbarFiller": {
+                backgroundColor: "#f5f5f5 !important",
+              },
             }}
             pageSizeOptions={[5, 15]}
             disableRowSelectionOnClick
