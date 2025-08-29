@@ -16,13 +16,12 @@ import MobileDashboard from "../mobile-dashboard";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import { GetDigitalResource } from "@/features/digitial-resources/digital-resources.action";
 import {
-  Category,
   GeneratedLanguage,
   Language,
   Modality,
   Status,
-  Subtitle,
 } from "@/features/digitial-resources/digital-resources.types";
+import { setPagination } from "@/features/filter/filter.slice";
 
 const Table = () => {
   const t = useTranslations("Table");
@@ -52,6 +51,7 @@ const Table = () => {
       );
     };
     fetchDigitalResource();
+    dispatch(setPagination(paginationModel));
   }, [paginationModel]);
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const Table = () => {
     }
   }, [width, height]);
 
-  const columns: GridColDef<(typeof data)[number]>[] = [
+  const columns: GridColDef<(typeof rows)[number]>[] = [
     {
       field: "preview",
       headerName: `${t("preview")}`,
@@ -188,53 +188,108 @@ const Table = () => {
       },
     },
   ];
-  // const rows = [
-  //   {
-  //     uuid: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  //     url: {
-  //       thumbnail: "/thumbnail.png",
-  //       preview: "/preview.png",
-  //       play: "/random-video.mp4",
-  //       download: "/download.zip",
-  //     },
-  //     title: "Academic Management System: Academic Monitoring",
-  //     type: "Interactive expository session",
-  //     main_language: Language.es,
-  //     created_at: "2025-08-29T05:21:57.906Z",
-  //     duration: "00:25:22",
-  //     speakers: [
-  //       {
-  //         uuid: "sdfsfsdfdsgsd",
-  //         first_name: "Thania",
-  //         last_name: "Candelaria Chio Montero",
-  //       },
-  //       {
-  //         uuid: "sdfsfsdflkjhgfddsgsd",
-  //         first_name: "Daniel",
-  //         last_name: "González",
-  //       },
-  //       {
-  //         uuid: "sdfsfsdfdssadgsd",
-  //         first_name: "Author",
-  //         last_name: "1",
-  //       },
-  //       {
-  //         uuid: "sdfsfsdhfghfdsgsd",
-  //         first_name: "Author",
-  //         last_name: "2",
-  //       },
-  //       {
-  //         uuid: "sdfsfsdfduouiousgsd",
-  //         first_name: "Author",
-  //         last_name: "3",
-  //       },
-  //     ],
-  //     campus_name: "Main Campus",
-  //     generated_language: GeneratedLanguage.Automatic,
-  //     modality: Modality.Virtual,
-  //     status: Status.Published,
-  //   },
-  // ];
+  const rows = [
+    {
+      uuid: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      url: {
+        thumbnail: "/thumbnail.png",
+        preview: "/preview.png",
+        play: "/random-video.mp4",
+        download: "/download.zip",
+      },
+      title: "Academic Management System: Academic Monitoring",
+      type: "Interactive expository session",
+      main_language: Language.es,
+      created_at: "2025-08-29T05:21:57.906Z",
+      duration: "00:25:22",
+      speakers: [
+        {
+          uuid: "sdfsfsdfdsgsd",
+          first_name: "Thania",
+          last_name: "Candelaria Chio Montero",
+        },
+        {
+          uuid: "sdfsfsdflkjhgfddsgsd",
+          first_name: "Daniel",
+          last_name: "González",
+        },
+        {
+          uuid: "sdfsfsdfdssadgsd",
+          first_name: "Author",
+          last_name: "1",
+        },
+        {
+          uuid: "sdfsfsdhfghfdsgsd",
+          first_name: "Author",
+          last_name: "2",
+        },
+        {
+          uuid: "sdfsfsdfduouiousgsd",
+          first_name: "Author",
+          last_name: "3",
+        },
+      ],
+      campus_name: "Main Campus",
+      generated_language: GeneratedLanguage.Automatic,
+      modality: Modality.Virtual,
+      status: Status.Published,
+    },
+    {
+      uuid: "4fa85f64-5717-4562-b3fc-2c963f66afa7",
+      url: {
+        thumbnail: "/thumbnail.png",
+        preview: "/preview.png",
+        play: "/random-video.mp4",
+        download: "/download.zip",
+      },
+      title: "Digital Library: Resource Management",
+      type: "Lecture",
+      main_language: Language.en,
+      created_at: "2025-09-10T10:15:00.000Z",
+      duration: "00:40:10",
+      speakers: [
+        {
+          uuid: "author1",
+          first_name: "Maria",
+          last_name: "Lopez",
+        },
+        {
+          uuid: "author2",
+          first_name: "John",
+          last_name: "Smith",
+        },
+      ],
+      campus_name: "North Campus",
+      generated_language: GeneratedLanguage.Automatic,
+      modality: Modality.Presential,
+      status: Status.Published,
+    },
+    {
+      uuid: "5fa85f64-5717-4562-b3fc-2c963f66afa8",
+      url: {
+        thumbnail: "/thumbnail.png",
+        preview: "/preview.png",
+        play: "/random-video.mp4",
+        download: "/download.zip",
+      },
+      title: "E-learning Platform: Student Engagement",
+      type: "Workshop",
+      main_language: Language.fr,
+      created_at: "2025-10-01T14:30:45.000Z",
+      duration: "01:10:05",
+      speakers: [
+        {
+          uuid: "author3",
+          first_name: "Pierre",
+          last_name: "Dupont",
+        },
+      ],
+      campus_name: "East Campus",
+      generated_language: GeneratedLanguage.Automatic,
+      modality: Modality.Virtual,
+      status: Status.Published,
+    },
+  ];
 
   return (
     <Box className={styles.tableContainer}>
@@ -250,7 +305,7 @@ const Table = () => {
           <MobileDashboard />
         ) : (
           <DataGrid
-            rows={data}
+            rows={rows}
             columns={columns}
             getRowId={(row) => row.uuid}
             slotProps={{

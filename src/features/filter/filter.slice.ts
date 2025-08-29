@@ -1,49 +1,92 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FilterType } from "./filter.types";
-import { Dayjs } from "dayjs";
+import {
+  Category,
+  GeneratedLanguage,
+  Language,
+  Modality,
+  Status,
+  Subtitle,
+} from "../digitial-resources/digital-resources.types";
 
 const initialState = {
-  selectedCategory: [] as FilterType[],
-  selectedAuthors: [] as FilterType[],
-  selectedSubtitleLanguages: [] as FilterType[],
-  selectedAudioLanguages: null as FilterType | null,
-  selectedSubject: null as FilterType | null,
-  selectedDate: null as string | null,
-  status: null as string | null,
-  translation: null as string | null,
-  modality: null as string | null,
+  date: {
+    publication_date: undefined as string | undefined,
+  },
+  //TODO: add campus
+  search: undefined as string | undefined,
+  authors: undefined as string[] | undefined,
+  audio_languages: undefined as Language[] | undefined,
+  subtitle_languages: undefined as Subtitle[] | undefined,
+  status: undefined as Status | undefined,
+  subjects: undefined as string[] | undefined,
+  category: undefined as Category | undefined,
+  generated_language: undefined as GeneratedLanguage | undefined,
+  modality: undefined as Modality | undefined,
+  pagination: {
+    page: 1,
+    pageSize: 2,
+  },
 };
 
 const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
-    setSelectedCategory(state, action: PayloadAction<FilterType[]>) {
-      state.selectedCategory = action.payload;
+    clearFilters(state) {
+      state.category = undefined;
+      state.authors = undefined;
+      state.subtitle_languages = undefined;
+      state.audio_languages = undefined;
+      state.subjects = undefined;
+      state.date.publication_date = undefined;
+      state.status = undefined;
+      state.generated_language = undefined;
+      state.modality = undefined;
     },
-    setSelectedAuthors(state, action: PayloadAction<FilterType[]>) {
-      state.selectedAuthors = action.payload;
+    setSelectedCategory(state, action: PayloadAction<Category | undefined>) {
+      state.category = action.payload;
     },
-    setSelectedAudioLanguages(state, action: PayloadAction<FilterType | null>) {
-      state.selectedAudioLanguages = action.payload;
+    setSelectedAuthors(state, action: PayloadAction<string[] | undefined>) {
+      state.authors = action.payload;
     },
-    setSelectedSubtitleLanguages(state, action: PayloadAction<FilterType[]>) {
-      state.selectedSubtitleLanguages = action.payload;
+    setSelectedAudioLanguages(
+      state,
+      action: PayloadAction<Language[] | undefined>
+    ) {
+      state.audio_languages = action.payload;
     },
-    setSelectedDate(state, action: PayloadAction<string | null>) {
-      state.selectedDate = action.payload;
+    setSelectedSubtitleLanguages(
+      state,
+      action: PayloadAction<Subtitle[] | undefined>
+    ) {
+      state.subtitle_languages = action.payload;
     },
-    setStatus(state, action: PayloadAction<string>) {
+    setSelectedDate(state, action: PayloadAction<string | undefined>) {
+      state.date.publication_date = action.payload;
+    },
+    setStatus(state, action: PayloadAction<Status | undefined>) {
       state.status = action.payload;
     },
-    setSelectedSubject(state, action: PayloadAction<FilterType | null>) {
-      state.selectedSubject = action.payload;
+    setSelectedSubject(state, action: PayloadAction<string[] | undefined>) {
+      state.subjects = action.payload;
     },
-    setTranslation(state, action: PayloadAction<string | null>) {
-      state.translation = action.payload;
+    setTranslation(
+      state,
+      action: PayloadAction<GeneratedLanguage | undefined>
+    ) {
+      state.generated_language = action.payload;
     },
-    setModality(state, action: PayloadAction<string | null>) {
+    setModality(state, action: PayloadAction<Modality | undefined>) {
       state.modality = action.payload;
+    },
+    setSearch(state, action: PayloadAction<string | undefined>) {
+      state.search = action.payload;
+    },
+    setPagination(
+      state,
+      action: PayloadAction<{ page: number; pageSize: number }>
+    ) {
+      state.pagination = action.payload;
     },
   },
 });
@@ -58,5 +101,8 @@ export const {
   setSelectedSubject,
   setTranslation,
   setModality,
+  clearFilters,
+  setSearch,
+  setPagination,
 } = filterSlice.actions;
 export default filterSlice.reducer;

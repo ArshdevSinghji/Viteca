@@ -17,38 +17,45 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { FilterType } from "@/features/filter/filter.types";
-
-interface OptionType {
-  key: string;
-  value: string;
-}
+import { Speaker } from "@/features/speakers/speakers.slice";
+import { GetSpeakers } from "@/features/speakers/speakers.action";
+import { useAppDispatch } from "@/features/hooks";
 
 interface MultiSelectInfiniteScroll {
-  value: FilterType[] | FilterType | null;
+  value: string[] | undefined;
   label: string;
   multiple?: boolean;
   searchPlaceholder?: string;
   noOptionsText?: string;
-  options: OptionType[];
+  options: Speaker[];
   totalOptions: number;
-  loadMore: () => void;
-  onChange: (option: FilterType) => void;
-  onDelete: (option: FilterType) => void;
+  onChange: (option: any) => void;
+  onDelete: (option: any) => void;
 }
 
 const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
   value,
   label,
-  multiple = false,
+  multiple,
   searchPlaceholder = "Search...",
   noOptionsText = "No data found",
   options,
   totalOptions,
-  loadMore,
   onChange,
   onDelete,
 }) => {
   const [searchText, setSearchText] = React.useState("");
+  const dispatch = useAppDispatch();
+
+  const loadMore = async () => {
+    await dispatch(
+      GetSpeakers({
+        limit: value?.length ?? 0 + 5,
+        page: Math.ceil((value?.length ?? 0 + 1) / 5),
+        search: searchText,
+      })
+    );
+  };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchText = event.target.value;
@@ -195,8 +202,8 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
             // );
             return (
               <MenuItem
-                key={option.key}
-                value={option.value}
+                key={option.uuid}
+                value={option.first_name + " " + option.last_name}
                 // sx={{
                 //   backgroundColor: isSelected ? "#E8F0FE" : "transparent",
                 //   "&:hover": {
@@ -204,7 +211,10 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
                 //   },
                 // }}
                 onClick={() =>
-                  onChange({ key: option.key, value: option.value })
+                  onChange({
+                    key: option.uuid,
+                    value: option.first_name + " " + option.last_name,
+                  })
                 }
               >
                 <Box
@@ -248,10 +258,10 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
                             },
                           },
                         }}
-                        title={option.value}
+                        title={option.first_name + " " + option.last_name}
                       >
                         <Typography
-                          data-test-id={`text-infinite-scroll-${option.key}-menu-${label}`}
+                          data-test-id={`text-infinite-scroll-${option.uuid}-menu-${label}`}
                           sx={{
                             maxWidth: "fit-content",
                             fontSize: "14px !important",
@@ -261,7 +271,7 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
                             flexGrow: 1,
                           }}
                         >
-                          {option.value}
+                          {option.first_name + " " + option.last_name}
                         </Typography>
                       </Tooltip>
                     }

@@ -4,21 +4,41 @@ import { Box, Button, IconButton, InputBase, Stack } from "@mui/material";
 
 import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
+import FilterDrawer from "../filter-drawer";
 
 import styles from "./search-bar.module.scss";
+
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import FilterDrawer from "../filter-drawer";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/features/hooks";
+import { setSearch } from "@/features/filter/filter.slice";
+import { GetDigitalResource } from "@/features/digitial-resources/digital-resources.action";
 
 type Anchor = "right";
 
 const SearchBar = () => {
   const t = useTranslations("Table");
+
+  const { search, pagination } = useAppSelector((state) => state.filter);
   const [state, setState] = useState({
     right: false,
   });
+  const dispatch = useAppDispatch();
 
-  const [searchTerm, setSearchTerm] = useState("");
+  useEffect(() => {
+    const fetchData = async () => {
+      await dispatch(
+        GetDigitalResource({
+          search,
+          pagination: {
+            page: pagination.page,
+            limit: pagination.pageSize,
+          },
+        })
+      );
+    };
+    fetchData();
+  }, [search, dispatch]);
 
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
@@ -61,13 +81,13 @@ const SearchBar = () => {
             id="search-input"
             name="search"
             placeholder={t("placeholder")}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={search || ""}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
             className={styles.input}
             endAdornment={
-              searchTerm && (
+              search && (
                 <CloseIcon
-                  onClick={() => setSearchTerm("")}
+                  onClick={() => dispatch(setSearch(undefined))}
                   sx={{
                     fontSize: "20px",
                     color: "#424242",

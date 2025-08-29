@@ -1,48 +1,38 @@
-import MultiSelect from "@/components/digital-resource/shared/multi-select";
+import MultiSelectInfiniteScroll from "@/components/digital-resource/shared/multi-select/multi-select-infinite-scroll";
 import { setSelectedAuthors } from "@/features/filter/filter.slice";
-import { useAppSelector } from "@/features/hooks";
+import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import React from "react";
 
-const author = [
-  {
-    key: "John Doe",
-    value: "John Doe",
-  },
-  {
-    key: "Jane Smith",
-    value: "Jane Smith",
-  },
-  {
-    key: "Emily Johnson",
-    value: "Emily Johnson",
-  },
-  {
-    key: "Michael Brown",
-    value: "Michael Brown",
-  },
-];
+const MultiSelectAuthorInfiniteScroll = () => {
+  const dispatch = useAppDispatch();
+  const { data, count } = useAppSelector((state) => state.speaker);
+  const { authors } = useAppSelector((state) => state.filter);
 
-const MultiSelectAuthor: React.FC<{
-  show: boolean;
-  anchorEl: any;
-  handleMouseEnter: (e: any, param: string) => void;
-  handleMouseLeave: (param: string) => void;
-}> = ({ show, anchorEl, handleMouseEnter, handleMouseLeave }) => {
-  const selectedAuthors = useAppSelector(
-    (state) => state.filter.selectedAuthors
-  );
+  const onChange = (option: (typeof data)[0]) => {
+    const newOption = option.first_name + " " + option.last_name;
+    dispatch(setSelectedAuthors([...(authors ?? []), newOption]));
+  };
+
+  const onDelete = (option: (typeof data)[0]) => {
+    const newOption = option.first_name + " " + option.last_name;
+    dispatch(
+      setSelectedAuthors(authors?.filter((author) => author !== newOption))
+    );
+  };
+
   return (
-    <MultiSelect
+    <MultiSelectInfiniteScroll
+      value={authors}
       label="Author"
-      options={author}
-      selectedValue={selectedAuthors}
-      setSelectedValue={setSelectedAuthors}
-      show={show}
-      anchorEl={anchorEl}
-      handleMouseEnter={handleMouseEnter}
-      handleMouseLeave={handleMouseLeave}
+      multiple={true}
+      searchPlaceholder="Search authors..."
+      noOptionsText="No authors found"
+      options={data}
+      totalOptions={count}
+      onChange={onChange}
+      onDelete={onDelete}
     />
   );
 };
 
-export default MultiSelectAuthor;
+export default MultiSelectAuthorInfiniteScroll;

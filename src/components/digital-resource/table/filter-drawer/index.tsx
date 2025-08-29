@@ -1,3 +1,5 @@
+"use client";
+
 import { AppBar, Box, Button, Drawer, Stack, Typography } from "@mui/material";
 
 import FilterFields from "../../ui/filter-fields";
@@ -7,6 +9,9 @@ import React from "react";
 
 import { useWindowSize } from "@/hooks/window-size/use-window-size.hook";
 import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/features/hooks";
+import { clearFilters } from "@/features/filter/filter.slice";
+import { GetDigitalResource } from "@/features/digitial-resources/digital-resources.action";
 
 export default function FilterDrawer(props: {
   state: {
@@ -18,6 +23,37 @@ export default function FilterDrawer(props: {
   const { width } = useWindowSize();
 
   const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  const filterState = useAppSelector((state) => state.filter);
+  const dispatch = useAppDispatch();
+
+  const handleClear = () => {
+    dispatch(clearFilters());
+  };
+
+  const handleApply = async (e: any) => {
+    await dispatch(
+      GetDigitalResource({
+        search: filterState.search,
+        modality: filterState.modality,
+        generated_language: filterState.generated_language,
+        category: filterState.category,
+        subjects: filterState.subjects,
+        status: filterState.status,
+        subtitle_languages: filterState.subtitle_languages,
+        audio_languages: filterState.audio_languages,
+        // campuses: filterState.campuses,
+        date_filter: {
+          publication_date: filterState.date.publication_date,
+        },
+        pagination: {
+          page: filterState.pagination.page || 1,
+          limit: filterState.pagination.pageSize || 2,
+        },
+      })
+    );
+    toggleDrawer("right", false)(e);
+  };
 
   useEffect(() => {
     setIsMobile(width < 480);
@@ -50,12 +86,12 @@ export default function FilterDrawer(props: {
         <FilterFields />
 
         <Box className={styles.button}>
-          <Button variant="text" disabled>
+          <Button variant="text" onClick={handleClear}>
             Clear
           </Button>
           <Button
             variant="text"
-            onClick={toggleDrawer("right", false)}
+            onClick={(e) => handleApply(e)}
             sx={{
               fontSize: "14px",
               fontWeight: 600,

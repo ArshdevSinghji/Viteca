@@ -13,29 +13,25 @@ import styles from "./multi-select.module.scss";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
-import React from "react";
-import { FilterType } from "@/features/filter/filter.types";
+import React, { useState } from "react";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
+import {
+  Language,
+  Subtitle,
+} from "@/features/digitial-resources/digital-resources.types";
 
 const LIMIT_SIZE = 1;
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-interface OptionType {
-  key: string;
-  value: string;
-}
-
 interface MultiSelectProps {
   label: string;
-  options: OptionType[];
-  selectedValue: FilterType[];
-  setSelectedValue: ActionCreatorWithPayload<FilterType[]>;
-  show: boolean;
-  anchorEl: any;
-  handleMouseEnter: (e: any, param: string) => void;
-  handleMouseLeave: (param: string) => void;
+  options: string[];
+  selectedValue: string[] | undefined;
+  setSelectedValue:
+    | ActionCreatorWithPayload<Subtitle[] | undefined>
+    | ActionCreatorWithPayload<Language[] | undefined>;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -43,12 +39,19 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   options,
   selectedValue,
   setSelectedValue,
-  show,
-  anchorEl,
-  handleMouseEnter,
-  handleMouseLeave,
 }) => {
   const dispatch = useAppDispatch();
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handleMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
+    setIsHovered(true);
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setAnchorEl(null);
+  };
 
   return (
     <Autocomplete
@@ -59,15 +62,13 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       openOnFocus={false}
       options={options}
       disableCloseOnSelect
-      value={selectedValue}
+      value={selectedValue || []}
       onChange={(event, newValue) => {
-        const uniqueValues = Array.from(
-          new Map(newValue.map((item) => [item.value, item])).values()
-        );
-        dispatch(setSelectedValue(uniqueValues));
+        const uniqueValues = new Set(newValue);
+        dispatch(setSelectedValue(Array.from(uniqueValues) as any[]));
       }}
-      isOptionEqualToValue={(option, value) => option.value === value.value}
-      getOptionLabel={(option) => option.value ?? ""}
+      isOptionEqualToValue={(option, value) => option === value}
+      getOptionLabel={(option) => option ?? ""}
       renderOption={(props, option, { selected }) => {
         const { key, ...optionProps } = props;
         return (
@@ -79,7 +80,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
               checked={selected}
               size="small"
             />
-            {option.value}
+            {option}
           </li>
         );
       }}
@@ -91,41 +92,48 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       slotProps={{
         chip: { size: "small", className: styles.chip },
       }}
-      getLimitTagsText={(more) => (
-        <Box>
-          <Chip
-            label={`+${more}`}
-            className={styles.tag}
-            size="small"
-            onDelete={() => {
-              dispatch(setSelectedValue(selectedValue.slice(0, LIMIT_SIZE)));
-            }}
-            onMouseEnter={(e) => handleMouseEnter(e, label)}
-            onMouseLeave={() => handleMouseLeave(label)}
-            sx={{ cursor: "pointer" }}
-          />
+      getLimitTagsText={(more) => {
+        return (
+          <Box>
+            <Chip
+              label={`+${more}`}
+              className={styles.tag}
+              size="small"
+              onDelete={() => {
+                dispatch(
+                  setSelectedValue(selectedValue?.slice(0, LIMIT_SIZE) as any[])
+                );
+              }}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              sx={{ cursor: "pointer" }}
+            />
 
-          <Popper
-            open={show}
-            anchorEl={anchorEl}
-            placement="bottom"
-            style={{ zIndex: 1600 }}
-          >
-            <ClickAwayListener onClickAway={() => handleMouseLeave(label)}>
-              <Box className={styles.popper}>
-                {selectedValue.slice(LIMIT_SIZE).map((value, index) => (
-                  <Chip
-                    key={index}
-                    label={value.value}
-                    className={styles.tag}
-                    size="small"
-                  />
-                ))}
-              </Box>
-            </ClickAwayListener>
-          </Popper>
-        </Box>
-      )}
+            <Popper
+              open={isHovered}
+              anchorEl={anchorEl}
+              placement="bottom"
+              style={{ zIndex: 1600 }}
+            >
+              <ClickAwayListener onClickAway={handleMouseLeave}>
+                <Box className={styles.popper}>
+                  {selectedValue &&
+                    selectedValue
+                      ?.slice(LIMIT_SIZE)
+                      .map((value, index) => (
+                        <Chip
+                          key={index}
+                          label={value}
+                          className={styles.tag}
+                          size="small"
+                        />
+                      ))}
+                </Box>
+              </ClickAwayListener>
+            </Popper>
+          </Box>
+        );
+      }}
       renderInput={(params) => (
         <TextField
           {...params}

@@ -3,7 +3,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { useState } from "react";
+import { useDebugValue, useState } from "react";
 
 import styles from "./filter-fields.module.scss";
 import CloseIcon from "@mui/icons-material/Close";
@@ -11,65 +11,31 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import {
   setModality,
+  setSelectedCategory,
   setSelectedDate,
   setStatus,
   setTranslation,
 } from "@/features/filter/filter.slice";
 import dayjs, { Dayjs } from "dayjs";
 
-import MultiSelectCategory from "../../table/filter-drawer/category";
-import MultiSelectAuthor from "../../table/filter-drawer/author";
 import MultiSelectSubjectInfiniteScroll from "../../table/filter-drawer/subjects";
 import MultiSelectAudioInfiniteScroll from "../../table/filter-drawer/audio";
 import MultiSelectSubtitle from "../../table/filter-drawer/subtitle";
+import {
+  Category,
+  GeneratedLanguage,
+  Modality,
+  Status,
+} from "@/features/digitial-resources/digital-resources.types";
+import MultiSelectAuthorInfiniteScroll from "../../table/filter-drawer/author";
 
 const FilterFields = () => {
-  const { selectedDate, status, modality, translation } = useAppSelector(
-    (state) => state.filter
-  );
+  const { date, status, modality, generated_language, category } =
+    useAppSelector((state) => state.filter);
   const dispatch = useAppDispatch();
 
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const [showCategory, setShowCategory] = useState(false);
-  const [showAuthor, setShowAuthor] = useState(false);
-  const [showSubtitle, setShowSubtitle] = useState(false);
-
-  const dateValue = selectedDate ? dayjs(selectedDate) : null;
-
-  const handleMouseEnter = (event: any, param: string) => {
-    setAnchorEl(event.currentTarget);
-    switch (param) {
-      case "Category":
-        setShowCategory(true);
-        break;
-      case "Author":
-        setShowAuthor(true);
-        break;
-      case "Subtitle":
-        setShowSubtitle(true);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleMouseLeave = (param: string) => {
-    setAnchorEl(null);
-    switch (param) {
-      case "Category":
-        setShowCategory(false);
-        break;
-      case "Author":
-        setShowAuthor(false);
-        break;
-      case "Subtitle":
-        setShowSubtitle(false);
-        break;
-      default:
-        break;
-    }
-  };
+  const dateValue =
+    date && date.publication_date ? dayjs(date.publication_date) : null;
 
   return (
     <Box className={styles.main}>
@@ -111,7 +77,7 @@ const FilterFields = () => {
                         color: "#424242",
                         cursor: "pointer",
                       }}
-                      onClick={() => dispatch(setSelectedDate(null))}
+                      onClick={() => dispatch(setSelectedDate(undefined))}
                     />
                   ) : null,
                 },
@@ -122,7 +88,7 @@ const FilterFields = () => {
             }}
             value={dateValue}
             onChange={(e: Dayjs | null) =>
-              dispatch(setSelectedDate(e ? e.toISOString() : null))
+              dispatch(setSelectedDate(e ? e.toISOString() : undefined))
             }
           />
         </DemoContainer>
@@ -143,30 +109,52 @@ const FilterFields = () => {
         }}
         value={status || ""}
         className={styles.select}
-        onChange={(e) => dispatch(setStatus(e.target.value))}
+        // onChange={(e) => dispatch(setStatus(e.target.value))}
         fullWidth
       >
-        <MenuItem value="Published">Published</MenuItem>
-        <MenuItem value="Draft" className={styles.menuItem}>
-          Draft
-        </MenuItem>
+        {Object.values(Status).map((status) => (
+          <MenuItem
+            key={status}
+            value={status}
+            onClick={() => dispatch(setStatus(status))}
+          >
+            {status}
+          </MenuItem>
+        ))}
       </TextField>
 
       <MultiSelectSubjectInfiniteScroll />
 
-      <MultiSelectCategory
-        show={showCategory}
-        anchorEl={anchorEl}
-        handleMouseEnter={handleMouseEnter}
-        handleMouseLeave={handleMouseLeave}
-      />
+      <TextField
+        select
+        variant="outlined"
+        label="Category"
+        size="small"
+        slotProps={{
+          inputLabel: {
+            sx: {
+              fontSize: 14,
+              color: " #9E9E9E",
+            },
+          },
+        }}
+        className={styles.select}
+        value={category || ""}
+        // onChange={(e) => dispatch(setTranslation(e.target.value))}
+        fullWidth
+      >
+        {Object.values(Category).map((category) => (
+          <MenuItem
+            key={category}
+            value={category}
+            onClick={() => dispatch(setSelectedCategory(category))}
+          >
+            {category}
+          </MenuItem>
+        ))}
+      </TextField>
 
-      <MultiSelectAuthor
-        show={showAuthor}
-        anchorEl={anchorEl}
-        handleMouseEnter={handleMouseEnter}
-        handleMouseLeave={handleMouseLeave}
-      />
+      <MultiSelectAuthorInfiniteScroll />
 
       <MultiSelectAudioInfiniteScroll />
 
@@ -184,12 +172,19 @@ const FilterFields = () => {
           },
         }}
         className={styles.select}
-        value={translation || ""}
-        onChange={(e) => dispatch(setTranslation(e.target.value))}
+        value={generated_language || ""}
+        // onChange={(e) => dispatch(setTranslation(e.target.value))}
         fullWidth
       >
-        <MenuItem value="Draft">Human</MenuItem>
-        <MenuItem value="Final">Machine</MenuItem>
+        {Object.values(GeneratedLanguage).map((lang) => (
+          <MenuItem
+            key={lang}
+            value={lang}
+            onClick={() => dispatch(setTranslation(lang))}
+          >
+            {lang}
+          </MenuItem>
+        ))}
       </TextField>
 
       <TextField
@@ -207,18 +202,21 @@ const FilterFields = () => {
         }}
         className={styles.select}
         value={modality || ""}
-        onChange={(e) => dispatch(setModality(e.target.value))}
+        // onChange={(e) => dispatch(setModality(e.target.value))}
         fullWidth
       >
-        <MenuItem value="Draft">Presential</MenuItem>
+        {Object.values(Modality).map((modality) => (
+          <MenuItem
+            key={modality}
+            value={modality}
+            onClick={() => dispatch(setModality(modality))}
+          >
+            {modality}
+          </MenuItem>
+        ))}
       </TextField>
 
-      <MultiSelectSubtitle
-        show={showSubtitle}
-        anchorEl={anchorEl}
-        handleMouseEnter={handleMouseEnter}
-        handleMouseLeave={handleMouseLeave}
-      />
+      <MultiSelectSubtitle />
     </Box>
   );
 };
