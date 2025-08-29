@@ -1,16 +1,16 @@
 import * as React from "react";
 import { Box, Chip, Drawer } from "@mui/material";
-import { Rows } from "..";
 import { Typography } from "@mui/material";
 
 import styles from "./bottom-drawer.module.scss";
+import { DigitalResource } from "@/features/digitial-resources/digital-resources.slice";
 
 export default function AnchorTemporaryDrawer(props: {
   state: {
     bottom: boolean;
   };
   toggleDrawer: any;
-  selectedRow: Rows | null;
+  selectedRow: DigitalResource | null;
 }) {
   const { state, toggleDrawer, selectedRow } = props;
 
@@ -38,16 +38,17 @@ export default function AnchorTemporaryDrawer(props: {
           </Typography>
           <Typography component={"div"} className={styles.drawerBody}>
             <Box>
-              Language: <Chip label={selectedRow.language} size="small" />
+              Language: <Chip label={selectedRow.main_language} size="small" />
             </Box>
           </Typography>
           <Typography component={"div"} className={styles.drawerBody}>
             <Box>
-              Translation: <Chip label={selectedRow.translation} size="small" />
+              Translation:{" "}
+              <Chip label={selectedRow.generated_language} size="small" />
             </Box>
           </Typography>
           <Typography className={styles.drawerBody}>
-            Creation Date: {selectedRow.creationDate}
+            Creation Date: {selectedRow.created_at}
           </Typography>
         </Box>
       )}

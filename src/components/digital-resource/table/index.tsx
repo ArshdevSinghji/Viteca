@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Chip, Typography } from "@mui/material";
+import { Box, Chip, duration, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 
 import SearchBar from "./search-bar";
@@ -13,13 +13,46 @@ import { useEffect, useState } from "react";
 import AuthorCell from "./author-cell";
 import MobileDashboard from "../mobile-dashboard";
 
+import { useAppDispatch, useAppSelector } from "@/features/hooks";
+import { GetDigitalResource } from "@/features/digitial-resources/digital-resources.action";
+import {
+  Category,
+  GeneratedLanguage,
+  Language,
+  Modality,
+  Status,
+  Subtitle,
+} from "@/features/digitial-resources/digital-resources.types";
+
 const Table = () => {
   const t = useTranslations("Table");
+
+  const { data } = useAppSelector((state) => state.digitalResources);
+  const dispatch = useAppDispatch();
 
   const { width, height } = useWindowSize();
 
   const [responsive, setResponsive] = useState<boolean>(false);
   const [hoveredRowId, setHoveredRowId] = useState<number | null>(null);
+
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: 2,
+    page: 0,
+  });
+
+  useEffect(() => {
+    const fetchDigitalResource = async () => {
+      await dispatch(
+        GetDigitalResource({
+          pagination: {
+            page: paginationModel.page + 1,
+            limit: paginationModel.pageSize,
+          },
+        })
+      );
+    };
+    fetchDigitalResource();
+  }, [paginationModel]);
 
   useEffect(() => {
     if (width < 480) {
@@ -29,7 +62,7 @@ const Table = () => {
     }
   }, [width, height]);
 
-  const columns: GridColDef<(typeof rows)[number]>[] = [
+  const columns: GridColDef<(typeof data)[number]>[] = [
     {
       field: "preview",
       headerName: `${t("preview")}`,
@@ -38,17 +71,17 @@ const Table = () => {
       editable: false,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
-        const isHovered = hoveredRowId === params.row.id;
+        const isHovered = hoveredRowId === params.row.uuid;
 
         return (
           <Box
             className={styles.previewContainer}
-            onMouseOver={() => setHoveredRowId(params.row.id)}
+            onMouseOver={() => setHoveredRowId(params.row.uuid)}
             onMouseOut={() => setHoveredRowId(null)}
           >
-            {isHovered && params.row.video ? (
+            {isHovered && params.row.url.play ? (
               <video
-                src={params.row.video}
+                src={params.row.url.play}
                 autoPlay
                 muted
                 loop
@@ -56,7 +89,7 @@ const Table = () => {
               />
             ) : (
               <img
-                src={params.row.preview}
+                src={params.row.url.preview}
                 alt="Preview"
                 className={styles.previewImage}
               />
@@ -96,7 +129,7 @@ const Table = () => {
       minWidth: 226,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
-        return <AuthorCell authors={params.row.authors} />;
+        return <AuthorCell authors={params.row.speakers} />;
       },
     },
     {
@@ -120,7 +153,7 @@ const Table = () => {
       renderCell: (params: GridRenderCellParams) => {
         return (
           <Chip
-            label={params.row.language}
+            label={params.row.main_language}
             size="small"
             className={styles.chip}
           />
@@ -135,7 +168,7 @@ const Table = () => {
       renderCell: (params: GridRenderCellParams) => {
         return (
           <Chip
-            label={params.row.translation}
+            label={params.row.generated_language}
             size="small"
             className={styles.chip}
           />
@@ -146,72 +179,62 @@ const Table = () => {
       field: "creationDate",
       headerName: `${t("creationDate")}`,
       flex: 1,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <Box className={styles.text}>
+            <Typography>{params.row.created_at}</Typography>
+          </Box>
+        );
+      },
     },
   ];
-  const rows = [
-    {
-      id: 1,
-      preview: "/preview.png",
-      video: "/random-video.mp4",
-      title: "Academic Management System: Academic Monitoring",
-      type: "Interactive expository session",
-      authors: [
-        "Thania Candelaria Chio Montero",
-        "Daniel González",
-        "Author 1",
-        "Author 2",
-        "Author 3",
-      ],
-      duration: "00:25:22",
-      language: "ES",
-      translation: "Human",
-      creationDate: "16-04-2025",
-    },
-    {
-      id: 2,
-      preview: "/preview.png",
-      title: "Digital Library: Resource Cataloging",
-      type: "Workshop",
-      authors: ["Maria Lopez", "John Smith", "Author 4", "Author 5"],
-      duration: "01:10:45",
-      language: "EN",
-      translation: "Machine",
-      creationDate: "10-03-2025",
-    },
-    {
-      id: 3,
-      preview: "/preview.png",
-      title: "E-Learning Platform: Course Creation",
-      type: "Seminar",
-      authors: ["Emily Clark", "Michael Brown"],
-      duration: "00:45:30",
-      language: "FR",
-      translation: "Human",
-      creationDate: "22-02-2025",
-    },
-    {
-      id: 4,
-      preview: "/preview.png",
-      title: "Research Repository: Data Management",
-      type: "Lecture",
-      authors: ["Sophie Turner", "David Lee", "Author 6"],
-      duration: "00:30:00",
-      language: "DE",
-      translation: "None",
-      creationDate: "05-01-2025",
-    },
-    {
-      id: 5,
-      preview: "/preview.png",
-      title: "Online Assessment: Exam Automation",
-      type: "Panel Discussion",
-      authors: ["Olivia Martinez", "James Wilson"],
-      duration: "00:55:10",
-      language: "ES",
-      translation: "Machine",
-      creationDate: "18-12-2024",
-    },
-  ];
+  // const rows = [
+  //   {
+  //     uuid: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  //     url: {
+  //       thumbnail: "/thumbnail.png",
+  //       preview: "/preview.png",
+  //       play: "/random-video.mp4",
+  //       download: "/download.zip",
+  //     },
+  //     title: "Academic Management System: Academic Monitoring",
+  //     type: "Interactive expository session",
+  //     main_language: Language.es,
+  //     created_at: "2025-08-29T05:21:57.906Z",
+  //     duration: "00:25:22",
+  //     speakers: [
+  //       {
+  //         uuid: "sdfsfsdfdsgsd",
+  //         first_name: "Thania",
+  //         last_name: "Candelaria Chio Montero",
+  //       },
+  //       {
+  //         uuid: "sdfsfsdflkjhgfddsgsd",
+  //         first_name: "Daniel",
+  //         last_name: "González",
+  //       },
+  //       {
+  //         uuid: "sdfsfsdfdssadgsd",
+  //         first_name: "Author",
+  //         last_name: "1",
+  //       },
+  //       {
+  //         uuid: "sdfsfsdhfghfdsgsd",
+  //         first_name: "Author",
+  //         last_name: "2",
+  //       },
+  //       {
+  //         uuid: "sdfsfsdfduouiousgsd",
+  //         first_name: "Author",
+  //         last_name: "3",
+  //       },
+  //     ],
+  //     campus_name: "Main Campus",
+  //     generated_language: GeneratedLanguage.Automatic,
+  //     modality: Modality.Virtual,
+  //     status: Status.Published,
+  //   },
+  // ];
 
   return (
     <Box className={styles.tableContainer}>
@@ -224,18 +247,12 @@ const Table = () => {
         }}
       >
         {responsive ? (
-          <MobileDashboard rows={rows} />
+          <MobileDashboard />
         ) : (
           <DataGrid
-            rows={rows}
+            rows={data}
             columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
-              },
-            }}
+            getRowId={(row) => row.uuid}
             slotProps={{
               columnHeaderSortIcon: {
                 style: {
@@ -270,7 +287,9 @@ const Table = () => {
                 backgroundColor: "#f5f5f5 !important",
               },
             }}
-            pageSizeOptions={[5, 15]}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            pageSizeOptions={[2, 4, 6]}
             disableRowSelectionOnClick
             disableColumnMenu
             rowHeight={115}

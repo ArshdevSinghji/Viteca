@@ -7,26 +7,18 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import styles from "./mobile-dashboard.module.scss";
 import { useState } from "react";
 import AnchorTemporaryDrawer from "./bottom-drawer";
-
-export interface Rows {
-  id: number;
-  preview: string;
-  title: string;
-  type: string;
-  duration: string;
-  language: string;
-  translation: string;
-  creationDate: string;
-}
+import { useAppSelector } from "@/features/hooks";
 
 type Anchor = "bottom";
 
-const MobileDashboard: React.FC<{ rows: Rows[] }> = ({ rows }) => {
+const MobileDashboard = () => {
+  const rows = useAppSelector((state) => state.digitalResources.data);
+
   const [state, setState] = useState({
     bottom: false,
   });
 
-  const [selectedRow, setSelectedRow] = useState<Rows | null>(null);
+  const [selectedRow, setSelectedRow] = useState<(typeof rows)[0] | null>(null);
 
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
@@ -44,45 +36,53 @@ const MobileDashboard: React.FC<{ rows: Rows[] }> = ({ rows }) => {
 
   return (
     <Box className={styles.mobileDashboardContainer}>
-      {rows.map((row) => (
-        <Paper
-          variant="outlined"
-          key={row.id}
-          className={styles.mobileDashboard}
-          onClick={(event) => {
-            toggleDrawer("bottom", true)(event);
-            setSelectedRow(row);
-          }}
-        >
-          <Box className={styles.preview}>
-            <img
-              src={row.preview}
-              alt="Preview"
-              className={styles.previewImage}
-            />
-            <Chip
-              label="Tap to Preview"
-              size="small"
-              className={styles.previewChip}
-            />
-          </Box>
-          <Stack direction="row" alignItems="center" gap="5px">
-            <Box sx={{ flexGrow: 1 }}>
-              <Typography className={styles.title}>{row.title}</Typography>
-              <Typography className={styles.type}>Type: {row.type}</Typography>
-              <Typography className={styles.creationDate}>
-                Creation Date: {row.creationDate}
-              </Typography>
-            </Box>
-            <MoreVertIcon />
-          </Stack>
-        </Paper>
-      ))}
-      <AnchorTemporaryDrawer
-        state={state}
-        toggleDrawer={toggleDrawer}
-        selectedRow={selectedRow}
-      />
+      {rows ? (
+        <>
+          {rows.map((row) => (
+            <Paper
+              variant="outlined"
+              key={row.uuid}
+              className={styles.mobileDashboard}
+              onClick={(event) => {
+                toggleDrawer("bottom", true)(event);
+                setSelectedRow(row);
+              }}
+            >
+              <Box className={styles.preview}>
+                <img
+                  src={row.urls.preview}
+                  alt="Preview"
+                  className={styles.previewImage}
+                />
+                <Chip
+                  label="Tap to Preview"
+                  size="small"
+                  className={styles.previewChip}
+                />
+              </Box>
+              <Stack direction="row" alignItems="center" gap="5px">
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography className={styles.title}>{row.title}</Typography>
+                  <Typography className={styles.type}>
+                    Type: {row.type}
+                  </Typography>
+                  <Typography className={styles.creationDate}>
+                    Creation Date: {row.created_at}
+                  </Typography>
+                </Box>
+                <MoreVertIcon />
+              </Stack>
+            </Paper>
+          ))}
+          <AnchorTemporaryDrawer
+            state={state}
+            toggleDrawer={toggleDrawer}
+            selectedRow={selectedRow}
+          />
+        </>
+      ) : (
+        <Typography>No data available</Typography>
+      )}
     </Box>
   );
 };

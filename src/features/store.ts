@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import filterReducer from "./filter/filter.slice";
+import digitalResourcesReducer from "./digitial-resources/digital-resources.slice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       filter: filterReducer,
+      digitalResources: digitalResourcesReducer,
     },
   });
 };

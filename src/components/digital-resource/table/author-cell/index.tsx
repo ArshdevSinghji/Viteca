@@ -4,7 +4,13 @@ import styles from "./author-cell.module.scss";
 
 import { Box, Chip, Tooltip } from "@mui/material";
 
-const AuthorCell: React.FC<{ authors: string[] }> = ({ authors }) => {
+interface Speakers {
+  uuid: string;
+  first_name: string;
+  last_name: string;
+}
+
+const AuthorCell: React.FC<{ authors: Speakers[] }> = ({ authors }) => {
   const [limit, setLimit] = useState<number | undefined>(undefined);
   const [allContainerDimensions, setAllContainerDimensions] = useState<
     {
@@ -60,10 +66,10 @@ const AuthorCell: React.FC<{ authors: string[] }> = ({ authors }) => {
   return (
     <Box className={styles.authorsContainer}>
       <Box className={styles.authorsInnerContainer} ref={containerRef}>
-        {authors.slice(0, limit).map((author: string) => (
+        {authors.slice(0, limit).map((author: Speakers) => (
           <Chip
-            key={author}
-            label={author}
+            key={author.uuid}
+            label={`${author.first_name} ${author.last_name}`}
             size="small"
             className={styles.chip}
             ref={measureChip}
