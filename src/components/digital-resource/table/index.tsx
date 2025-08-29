@@ -219,6 +219,8 @@ const Table = () => {
       <Box
         sx={{
           width: "100%",
+          flex: 1,
+          minHeight: 0,
         }}
       >
         {responsive ? (

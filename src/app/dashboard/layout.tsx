@@ -9,7 +9,7 @@ export default async function RootLayout({
   return (
     <Stack height={"100vh"}>
       <Navbar />
-      <Box flexGrow={2}>{children}</Box>
+      {children}
     </Stack>
   );
 }

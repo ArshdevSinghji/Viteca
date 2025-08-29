@@ -10,7 +10,7 @@ import ProfileMenu from "./profile-menu";
 
 export default function Navbar() {
   return (
-    <Box sx={{ flexGrow: 1, zIndex: 1300 }}>
+    <Box sx={{ zIndex: 1300 }}>
       <AppBar position="static" className={styles.appBar}>
         <Toolbar className={styles.toolbar}>
           <Typography variant="h6" component="div" className={styles.title}>
