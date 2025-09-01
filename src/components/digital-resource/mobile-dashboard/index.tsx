@@ -5,21 +5,48 @@ import { Box, Chip, Paper, Stack, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import styles from "./mobile-dashboard.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AnchorTemporaryDrawer from "./bottom-drawer";
-import { useAppSelector } from "@/features/hooks";
+import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import NotFound from "../table/not-found";
+import { GetDigitalResource } from "@/features/digitial-resources/digital-resources.action";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 type Anchor = "bottom";
 
 const MobileDashboard = () => {
-  const rows = useAppSelector((state) => state.digitalResources.data);
+  const { data, count } = useAppSelector((state) => state.digitalResources);
+  const dispatch = useAppDispatch();
 
   const [state, setState] = useState({
     bottom: false,
   });
 
-  const [selectedRow, setSelectedRow] = useState<(typeof rows)[0] | null>(null);
+  const [selectedRow, setSelectedRow] = useState<(typeof data)[0] | null>(null);
+
+  const loadMore = async () => {
+    await dispatch(
+      GetDigitalResource({
+        pagination: {
+          page: Math.ceil((data.length ?? 0 + 1) / 5),
+          limit: data.length ?? 0 + 5,
+        },
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (!data) {
+      dispatch(
+        GetDigitalResource({
+          pagination: {
+            page: 1,
+            limit: 5,
+          },
+        })
+      );
+    }
+  }, [dispatch]);
 
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
@@ -37,9 +64,15 @@ const MobileDashboard = () => {
 
   return (
     <Box className={styles.mobileDashboardContainer}>
-      {rows ? (
-        <>
-          {rows.map((row) => (
+      {data ? (
+        <InfiniteScroll
+          dataLength={data.length}
+          next={loadMore}
+          hasMore={data.length < count}
+          loader={<h4>Loading...</h4>}
+          scrollableTarget="infinite-scroll-select-menu"
+        >
+          {data.map((row) => (
             <Paper
               variant="outlined"
               key={row.uuid}
@@ -80,7 +113,7 @@ const MobileDashboard = () => {
             toggleDrawer={toggleDrawer}
             selectedRow={selectedRow}
           />
-        </>
+        </InfiniteScroll>
       ) : (
         <Paper variant="outlined" sx={{ flexGrow: 1, borderRadius: "8px" }}>
           <NotFound />

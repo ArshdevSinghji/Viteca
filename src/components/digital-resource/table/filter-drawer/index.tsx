@@ -97,7 +97,21 @@ export default function FilterDrawer(props: {
         <FilterFields />
 
         <Box className={styles.button}>
-          <Button variant="text" onClick={handleClear}>
+          <Button
+            variant="text"
+            onClick={handleClear}
+            disabled={
+              !filterState.authors &&
+              !filterState.audio_languages &&
+              !filterState.subtitle_languages &&
+              !filterState.date.publication_date &&
+              !filterState.generated_language &&
+              !filterState.modality &&
+              !filterState.status &&
+              !filterState.subjects &&
+              !filterState.category
+            }
+          >
             Clear
           </Button>
           <Button
