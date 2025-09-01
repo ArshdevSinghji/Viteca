@@ -5,6 +5,8 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import styles from "./select-language.module.scss";
+import Cookies from "js-cookie";
+
 import { setUserLocale } from "@/localization";
 import { useState } from "react";
 
@@ -19,8 +21,8 @@ const LANGUAGES = [
   },
 ];
 
-export default function SelectLanguage() {
-  const [language, setLanguage] = useState(LANGUAGES[0].code);
+export default function SelectLanguage({ locale }: { locale: string }) {
+  const [language, setLanguage] = useState(locale);
 
   const handleLanguageChange = async (event: SelectChangeEvent) => {
     const selectedLocale = event.target.value;
@@ -37,15 +39,22 @@ export default function SelectLanguage() {
         onChange={handleLanguageChange}
         className={styles.select}
         sx={{
-          // width: "177px",
-          // height: "36px",
-          // pl: 2,
-          // fontSize: "14px",
           "& fieldset": { border: "none" },
+        }}
+        MenuProps={{
+          sx: {
+            "& .MuiMenuItem-root": {
+              fontSize: "14px !important",
+            },
+          },
         }}
       >
         {LANGUAGES.map((lang) => (
-          <MenuItem key={lang.code} value={lang.code}>
+          <MenuItem
+            key={lang.code}
+            value={lang.code}
+            className={styles.menuItem}
+          >
             {lang.label}
           </MenuItem>
         ))}

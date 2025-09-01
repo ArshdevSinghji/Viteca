@@ -2,8 +2,8 @@ import { Box, Typography } from "@mui/material";
 
 import styles from "./login.module.scss";
 import GoogleAuthButton from "./google-auth-button";
-import SelectLanguage from "./select-language";
 import { useTranslations } from "next-intl";
+import { ServerComponent } from "./select-language/server-component";
 
 const Login = () => {
   const t = useTranslations("Login");
@@ -24,7 +24,7 @@ const Login = () => {
           <GoogleAuthButton />
         </Box>
         <Box>
-          <SelectLanguage />
+          <ServerComponent />
         </Box>
       </Box>
     </Box>
