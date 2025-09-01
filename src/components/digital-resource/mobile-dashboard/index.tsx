@@ -8,6 +8,7 @@ import styles from "./mobile-dashboard.module.scss";
 import { useState } from "react";
 import AnchorTemporaryDrawer from "./bottom-drawer";
 import { useAppSelector } from "@/features/hooks";
+import NotFound from "../table/not-found";
 
 type Anchor = "bottom";
 
@@ -81,7 +82,9 @@ const MobileDashboard = () => {
           />
         </>
       ) : (
-        <Typography>No data available</Typography>
+        <Paper variant="outlined" sx={{ flexGrow: 1, borderRadius: "8px" }}>
+          <NotFound />
+        </Paper>
       )}
     </Box>
   );

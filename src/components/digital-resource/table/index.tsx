@@ -22,6 +22,7 @@ import {
   Status,
 } from "@/features/digitial-resources/digital-resources.types";
 import { setPagination } from "@/features/filter/filter.slice";
+import NotFound from "./not-found";
 
 const Table = () => {
   const t = useTranslations("Table");
@@ -62,7 +63,7 @@ const Table = () => {
     }
   }, [width, height]);
 
-  const columns: GridColDef<(typeof rows)[number]>[] = [
+  const columns: GridColDef<(typeof data)[number]>[] = [
     {
       field: "preview",
       headerName: `${t("preview")}`,
@@ -305,9 +306,12 @@ const Table = () => {
           <MobileDashboard />
         ) : (
           <DataGrid
-            rows={rows}
+            rows={data}
             columns={columns}
             getRowId={(row) => row.uuid}
+            slots={{
+              noRowsOverlay: NotFound,
+            }}
             slotProps={{
               columnHeaderSortIcon: {
                 style: {

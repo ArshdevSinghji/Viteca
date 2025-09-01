@@ -1,0 +1,26 @@
+.notFoundImage {
+  max-width: 257px;
+  height: 171px;
+}
+
+.notFoundHeadText {
+  color: var(--neutral-neutral-800, #424242);
+  text-align: center;
+
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.notFoundBodyText {
+  color: var(--neutral-neutral-800, #424242);
+  text-align: center;
+
+  font-size: 14px;
+  line-height: 20px;
+  max-width: 496px;
+
+  @media screen and (max-width: 480px) {
+    max-width: 305px;
+  }
+}
