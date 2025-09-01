@@ -46,7 +46,9 @@ const MenuSelect: React.FC<MenuSelectProps> = ({
           MenuProps: {
             PaperProps: {
               sx: {
-                borderRadius: "4px",
+                borderRadius: "8px",
+                fontSize: 14,
+                color: "#424242",
                 boxShadow:
                   "0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)",
                 "& .MuiMenuItem-root": {

@@ -1,10 +1,12 @@
 import {
   Box,
+  Chip,
   IconButton,
   InputAdornment,
   MenuItem,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -16,6 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import {
+  setDateComparison,
   setModality,
   setSelectedCategory,
   setSelectedDate,
@@ -65,8 +68,79 @@ const FilterFields = () => {
                   />
                 </svg>
               ),
+              layout: (props) => {
+                return (
+                  <Box>
+                    {props.children}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "6px",
+                        padding: 2,
+                        borderTop: "1px solid #e0e0e0",
+                      }}
+                    >
+                      {[
+                        {
+                          key: "eq",
+                          label: "Equal to",
+                        },
+                        {
+                          key: "gt",
+                          label: "Greater than",
+                        },
+                        {
+                          key: "lt",
+                          label: "Less than",
+                        },
+                      ].map((label) => (
+                        <Box
+                          key={label.key}
+                          className={styles.calendarBox}
+                          style={{
+                            backgroundColor:
+                              label.key !== date.date_comparison
+                                ? "#eeeeee"
+                                : "#E8F0FE",
+                          }}
+                          onClick={() => {
+                            console.log(label.key);
+                            dispatch(
+                              setDateComparison(label.key as "gt" | "lt" | "eq")
+                            );
+                          }}
+                        >
+                          {label.key === date.date_comparison && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="12"
+                              height="12"
+                              viewBox="0 0 12 12"
+                              fill="none"
+                            >
+                              <path
+                                d="M4.4001 7.95039L2.3001 5.85039L1.6001 6.55039L4.4001 9.35039L10.4001 3.35039L9.7001 2.65039L4.4001 7.95039Z"
+                                fill="#424242"
+                              />
+                            </svg>
+                          )}
+                          <Typography>{label.label}</Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+                );
+              },
             }}
             slotProps={{
+              popper: {
+                sx: {
+                  "& .MuiPaper-root": {
+                    borderRadius: "8px",
+                  },
+                },
+              },
               textField: {
                 variant: "outlined",
                 size: "small",

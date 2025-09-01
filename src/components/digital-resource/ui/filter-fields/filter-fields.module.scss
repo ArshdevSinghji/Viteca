@@ -40,3 +40,20 @@
   box-shadow: 0 2px 8px 3px rgba(51, 51, 51, 0.15);
   max-width: 291px;
 }
+
+.calendarBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #eeeeee;
+  padding: 2px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  p {
+    color: var(--neutral-neutral-800, #424242);
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    line-height: 20px;
+  }
+}

@@ -11,6 +11,7 @@ import {
 const initialState = {
   date: {
     publication_date: undefined as string | undefined,
+    date_comparison: "eq" as "gt" | "lt" | "eq",
   },
   //TODO: add campus
   search: undefined as string | undefined,
@@ -64,6 +65,9 @@ const filterSlice = createSlice({
     setSelectedDate(state, action: PayloadAction<string | undefined>) {
       state.date.publication_date = action.payload;
     },
+    setDateComparison(state, action: PayloadAction<"gt" | "lt" | "eq">) {
+      state.date.date_comparison = action.payload;
+    },
     setStatus(state, action: PayloadAction<Status | undefined>) {
       state.status = action.payload;
     },
@@ -104,5 +108,6 @@ export const {
   clearFilters,
   setSearch,
   setPagination,
+  setDateComparison,
 } = filterSlice.actions;
 export default filterSlice.reducer;

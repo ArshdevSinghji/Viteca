@@ -53,7 +53,7 @@ interface DigitalResourceFilter {
   campuses?: string[];
   date_filter?: {
     publication_date?: string;
-    date_comparison?: "gt" | "lt" | "eq" | "gte" | "lte";
+    date_comparison?: "gt" | "lt" | "eq";
   };
   sort?: {
     order?: "ASC" | "DESC";

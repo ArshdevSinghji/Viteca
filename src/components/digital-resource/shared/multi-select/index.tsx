@@ -90,6 +90,13 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         },
       }}
       slotProps={{
+        popper: {
+          sx: {
+            "& .MuiPaper-root": {
+              borderRadius: "8px",
+            },
+          },
+        },
         chip: { size: "small", className: styles.chip },
       }}
       getLimitTagsText={(more) => {

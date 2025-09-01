@@ -345,6 +345,23 @@ const Table = () => {
               "& .MuiDataGrid-scrollbarFiller": {
                 backgroundColor: "#f5f5f5 !important",
               },
+
+              "& .MuiNativeSelect-root": {
+                border: "1px solid #E0E0E0 !important",
+              },
+
+              "& .mui-18zjd9i-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input":
+                {
+                  display: "flex !important",
+                  minWidth: "74px !important",
+                  border: "1px solid #E0E0E0 !important",
+                  borderRadius: "8px !important",
+                  padding: "0 12px 0 16px !important",
+                  gap: "8px !important",
+                  minHeight: "32px !important",
+                  alignItems: "center !important",
+                  color: "#424242",
+                },
             }}
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
