@@ -363,11 +363,13 @@ const Table = () => {
                   color: "#424242",
                 },
             }}
+            hideFooter={!data}
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
-            pageSizeOptions={[2, 4, 6]}
+            pageSizeOptions={data && [2, 4, 6]}
             disableRowSelectionOnClick
             disableColumnMenu
+            disableColumnResize
             rowHeight={115}
           />
         )}

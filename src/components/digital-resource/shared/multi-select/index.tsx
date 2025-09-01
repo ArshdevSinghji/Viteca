@@ -62,6 +62,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       openOnFocus={false}
       options={options}
       disableCloseOnSelect
+      disableClearable
       value={selectedValue || []}
       onChange={(event, newValue) => {
         const uniqueValues = new Set(newValue);

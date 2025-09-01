@@ -45,6 +45,7 @@ export default function FilterDrawer(props: {
         // campuses: filterState.campuses,
         date_filter: {
           publication_date: filterState.date.publication_date,
+          date_comparison: filterState.date.date_comparison,
         },
         pagination: {
           page: filterState.pagination.page || 1,

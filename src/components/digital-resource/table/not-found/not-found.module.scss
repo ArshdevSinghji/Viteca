@@ -1,26 +1,27 @@
 .notFoundImage {
-  max-width: 257px;
-  height: 171px;
+  max-width: 257px !important;
+  height: 171px !important;
 }
 
 .notFoundHeadText {
   color: var(--neutral-neutral-800, #424242);
   text-align: center;
 
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 24px;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 24px !important;
 }
 
 .notFoundBodyText {
   color: var(--neutral-neutral-800, #424242);
   text-align: center;
 
-  font-size: 14px;
-  line-height: 20px;
-  max-width: 496px;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  max-width: 496px !important;
 
   @media screen and (max-width: 480px) {
-    max-width: 305px;
+    max-width: 305px !important;
+    padding: 8px;
   }
 }

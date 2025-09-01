@@ -141,6 +141,7 @@ const FilterFields = () => {
                   },
                 },
               },
+              field: { clearable: true },
               textField: {
                 variant: "outlined",
                 size: "small",
@@ -151,26 +152,6 @@ const FilterFields = () => {
                     fontSize: 14,
                     borderRadius: "8px",
                   },
-                  endAdornment: dateValue ? (
-                    <IconButton
-                      size="small"
-                      sx={{
-                        // padding: "4px",
-                        "&:hover": {
-                          backgroundColor: "rgba(0, 0, 0, 0.04)",
-                        },
-                      }}
-                      onClick={() => dispatch(setSelectedDate(undefined))}
-                    >
-                      <CloseIcon
-                        sx={{
-                          fontSize: "20px",
-                          color: "#757575",
-                          cursor: "pointer",
-                        }}
-                      />
-                    </IconButton>
-                  ) : null,
                 },
                 InputLabelProps: {
                   sx: { fontSize: 14, color: " #9E9E9E" },
