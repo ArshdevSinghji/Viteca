@@ -1,9 +1,15 @@
-import { Box, MenuItem, TextField } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  InputAdornment,
+  MenuItem,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { useDebugValue, useState } from "react";
 
 import styles from "./filter-fields.module.scss";
 import CloseIcon from "@mui/icons-material/Close";
@@ -28,6 +34,7 @@ import {
   Status,
 } from "@/features/digitial-resources/digital-resources.types";
 import MultiSelectAuthorInfiniteScroll from "../../table/filter-drawer/author";
+import MenuSelect from "../../shared/text-field";
 
 const FilterFields = () => {
   const { date, status, modality, generated_language, category } =
@@ -71,14 +78,24 @@ const FilterFields = () => {
                     borderRadius: "8px",
                   },
                   endAdornment: dateValue ? (
-                    <CloseIcon
+                    <IconButton
+                      size="small"
                       sx={{
-                        fontSize: "20px",
-                        color: "#424242",
-                        cursor: "pointer",
+                        // padding: "4px",
+                        "&:hover": {
+                          backgroundColor: "rgba(0, 0, 0, 0.04)",
+                        },
                       }}
                       onClick={() => dispatch(setSelectedDate(undefined))}
-                    />
+                    >
+                      <CloseIcon
+                        sx={{
+                          fontSize: "20px",
+                          color: "#757575",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </IconButton>
                   ) : null,
                 },
                 InputLabelProps: {
@@ -94,127 +111,38 @@ const FilterFields = () => {
         </DemoContainer>
       </LocalizationProvider>
 
-      <TextField
-        select
-        variant="outlined"
-        label="Status"
-        size="small"
-        slotProps={{
-          inputLabel: {
-            sx: {
-              fontSize: "14px",
-              color: " #9E9E9E",
-            },
-          },
-        }}
-        value={status || ""}
-        className={styles.select}
-        // onChange={(e) => dispatch(setStatus(e.target.value))}
-        fullWidth
-      >
-        {Object.values(Status).map((status) => (
-          <MenuItem
-            key={status}
-            value={status}
-            onClick={() => dispatch(setStatus(status))}
-          >
-            {status}
-          </MenuItem>
-        ))}
-      </TextField>
+      <MenuSelect
+        label={"Status"}
+        value={status}
+        setFunction={setStatus}
+        enumType={Status}
+      />
 
       <MultiSelectSubjectInfiniteScroll />
 
-      <TextField
-        select
-        variant="outlined"
-        label="Category"
-        size="small"
-        slotProps={{
-          inputLabel: {
-            sx: {
-              fontSize: 14,
-              color: " #9E9E9E",
-            },
-          },
-        }}
-        className={styles.select}
-        value={category || ""}
-        // onChange={(e) => dispatch(setTranslation(e.target.value))}
-        fullWidth
-      >
-        {Object.values(Category).map((category) => (
-          <MenuItem
-            key={category}
-            value={category}
-            onClick={() => dispatch(setSelectedCategory(category))}
-          >
-            {category}
-          </MenuItem>
-        ))}
-      </TextField>
+      <MenuSelect
+        label={"Category"}
+        value={category}
+        setFunction={setSelectedCategory}
+        enumType={Category}
+      />
 
       <MultiSelectAuthorInfiniteScroll />
-
       <MultiSelectAudioInfiniteScroll />
 
-      <TextField
-        select
-        variant="outlined"
-        label="Translation"
-        size="small"
-        slotProps={{
-          inputLabel: {
-            sx: {
-              fontSize: 14,
-              color: " #9E9E9E",
-            },
-          },
-        }}
-        className={styles.select}
-        value={generated_language || ""}
-        // onChange={(e) => dispatch(setTranslation(e.target.value))}
-        fullWidth
-      >
-        {Object.values(GeneratedLanguage).map((lang) => (
-          <MenuItem
-            key={lang}
-            value={lang}
-            onClick={() => dispatch(setTranslation(lang))}
-          >
-            {lang}
-          </MenuItem>
-        ))}
-      </TextField>
+      <MenuSelect
+        label={"Translation"}
+        value={generated_language}
+        setFunction={setTranslation}
+        enumType={GeneratedLanguage}
+      />
 
-      <TextField
-        select
-        variant="outlined"
-        label="Modality"
-        size="small"
-        slotProps={{
-          inputLabel: {
-            sx: {
-              fontSize: 14,
-              color: " #9E9E9E",
-            },
-          },
-        }}
-        className={styles.select}
-        value={modality || ""}
-        // onChange={(e) => dispatch(setModality(e.target.value))}
-        fullWidth
-      >
-        {Object.values(Modality).map((modality) => (
-          <MenuItem
-            key={modality}
-            value={modality}
-            onClick={() => dispatch(setModality(modality))}
-          >
-            {modality}
-          </MenuItem>
-        ))}
-      </TextField>
+      <MenuSelect
+        label={"Modality"}
+        value={modality}
+        setFunction={setModality}
+        enumType={Modality}
+      />
 
       <MultiSelectSubtitle />
     </Box>
