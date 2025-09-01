@@ -5,7 +5,6 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import styles from "./select-language.module.scss";
-import Cookies from "js-cookie";
 
 import { setUserLocale } from "@/localization";
 import { useState } from "react";
