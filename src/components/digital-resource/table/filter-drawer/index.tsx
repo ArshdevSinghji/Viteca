@@ -10,7 +10,11 @@ import React from "react";
 import { useWindowSize } from "@/hooks/window-size/use-window-size.hook";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
-import { clearFilters } from "@/features/filter/filter.slice";
+import {
+  applyFilter,
+  clearFilters,
+  closeFilter,
+} from "@/features/filter/filter.slice";
 import { GetDigitalResource } from "@/features/digitial-resources/digital-resources.action";
 
 export default function FilterDrawer(props: {
@@ -24,11 +28,16 @@ export default function FilterDrawer(props: {
 
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
-  const filterState = useAppSelector((state) => state.filter);
+  const filterState = useAppSelector((state) => state.filter.draft);
   const dispatch = useAppDispatch();
 
   const handleClear = () => {
     dispatch(clearFilters());
+  };
+
+  const handleClose = (e: any) => {
+    dispatch(closeFilter());
+    toggleDrawer("right", false)(e);
   };
 
   const handleApply = async (e: any) => {
@@ -53,6 +62,7 @@ export default function FilterDrawer(props: {
         },
       })
     );
+    dispatch(applyFilter(filterState));
     toggleDrawer("right", false)(e);
   };
 
@@ -69,14 +79,14 @@ export default function FilterDrawer(props: {
             <CloseIcon
               width={20}
               height={20}
-              onClick={toggleDrawer("right", false)}
+              onClick={(e) => handleClose(e)}
               cursor={"pointer"}
             />
           </Box>
         ) : (
           <AppBar position="fixed" className={styles.appBar}>
             <Box sx={{ p: "12px", height: "48px" }}>
-              <CloseIcon onClick={toggleDrawer("right", false)} />
+              <CloseIcon onClick={(e) => handleClose(e)} />
             </Box>
             <Typography>Filters</Typography>
           </AppBar>

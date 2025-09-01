@@ -6,7 +6,7 @@ import React from "react";
 
 const MultiSelectSubtitle = () => {
   const subtitle_languages = useAppSelector(
-    (state) => state.filter.subtitle_languages
+    (state) => state.filter.draft.subtitle_languages
   );
   const subtitle = Object.values(Subtitle);
 

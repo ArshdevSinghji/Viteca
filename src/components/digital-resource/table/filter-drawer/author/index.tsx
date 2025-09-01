@@ -6,7 +6,7 @@ import React from "react";
 const MultiSelectAuthorInfiniteScroll = () => {
   const dispatch = useAppDispatch();
   const { data, count } = useAppSelector((state) => state.speaker);
-  const { authors } = useAppSelector((state) => state.filter);
+  const { authors } = useAppSelector((state) => state.filter.draft);
 
   const onChange = (option: (typeof data)[0]) => {
     const newOption = option.first_name + " " + option.last_name;

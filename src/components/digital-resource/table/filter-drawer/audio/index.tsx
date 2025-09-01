@@ -5,7 +5,7 @@ import { useAppSelector } from "@/features/hooks";
 import React from "react";
 
 const MultiSelectAudioInfiniteScroll = () => {
-  const { audio_languages } = useAppSelector((state) => state.filter);
+  const { audio_languages } = useAppSelector((state) => state.filter.draft);
 
   const audio = Object.values(Language);
 

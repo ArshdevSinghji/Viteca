@@ -6,7 +6,7 @@ import React from "react";
 const MultiSelectSubjectInfiniteScroll = () => {
   const dispatch = useAppDispatch();
   const { data, count } = useAppSelector((state) => state.speaker);
-  const { subjects } = useAppSelector((state) => state.filter);
+  const { subjects } = useAppSelector((state) => state.filter.draft);
 
   const onChange = (option: string) => {
     const newSubject = subjects ? [...subjects, option] : [option];

@@ -1,20 +1,10 @@
-import {
-  Box,
-  Chip,
-  IconButton,
-  InputAdornment,
-  MenuItem,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import styles from "./filter-fields.module.scss";
-import CloseIcon from "@mui/icons-material/Close";
 
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import {
@@ -41,7 +31,7 @@ import MenuSelect from "../../shared/text-field";
 
 const FilterFields = () => {
   const { date, status, modality, generated_language, category } =
-    useAppSelector((state) => state.filter);
+    useAppSelector((state) => state.filter.draft);
   const dispatch = useAppDispatch();
 
   const dateValue =

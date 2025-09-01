@@ -19,7 +19,7 @@ type Anchor = "right";
 const SearchBar = () => {
   const t = useTranslations("Table");
 
-  const { search, pagination } = useAppSelector((state) => state.filter);
+  const { search, pagination } = useAppSelector((state) => state.filter.draft);
   const [state, setState] = useState({
     right: false,
   });
