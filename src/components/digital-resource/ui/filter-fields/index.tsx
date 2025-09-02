@@ -48,9 +48,9 @@ const FilterFields = () => {
             },
             "& .MuiInputLabel-outlined": {
               top: "-2px",
-              "& .MuiInputLabel-shrink": {
-                top: "0px !important",
-              },
+            },
+            "& .MuiInputLabel-shrink": {
+              top: "0px !important",
             },
           }}
           slots={{

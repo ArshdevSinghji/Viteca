@@ -27,9 +27,24 @@ export default function FilterDrawer(props: {
   const { width } = useWindowSize();
 
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [disabled, setDisabled] = useState<boolean>(false);
 
   const filterState = useAppSelector((state) => state.filter.draft);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setDisabled(
+      !filterState.authors &&
+        !filterState.audio_languages &&
+        !filterState.subtitle_languages &&
+        !filterState.date.publication_date &&
+        !filterState.generated_language &&
+        !filterState.modality &&
+        !filterState.status &&
+        !filterState.subjects &&
+        !filterState.category
+    );
+  }, [filterState]);
 
   const handleClear = async (e: any) => {
     dispatch(clearFilters());
@@ -110,17 +125,8 @@ export default function FilterDrawer(props: {
           <Button
             variant="text"
             onClick={(e) => handleClear(e)}
-            disabled={
-              !filterState.authors &&
-              !filterState.audio_languages &&
-              !filterState.subtitle_languages &&
-              !filterState.date.publication_date &&
-              !filterState.generated_language &&
-              !filterState.modality &&
-              !filterState.status &&
-              !filterState.subjects &&
-              !filterState.category
-            }
+            disabled={disabled}
+            className={!disabled ? styles.clearButton : styles.disabledButton}
           >
             Clear
           </Button>
