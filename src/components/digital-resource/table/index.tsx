@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Chip, duration, Typography } from "@mui/material";
+import { Box, Chip, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 
 import SearchBar from "./search-bar";
@@ -363,6 +363,9 @@ const Table = () => {
                 },
               "& .MuiDataGrid-columnSeparator": {
                 display: "none",
+              },
+              "& .MuiDataGrid-columnHeader:focus-within": {
+                outline: "none",
               },
             }}
             hideFooter={!data}

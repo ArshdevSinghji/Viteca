@@ -16,7 +16,6 @@ import React from "react";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { FilterType } from "@/features/filter/filter.types";
 import { Speaker } from "@/features/speakers/speakers.slice";
 import { GetSpeakers } from "@/features/speakers/speakers.action";
 import { useAppDispatch } from "@/features/hooks";
@@ -50,8 +49,8 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
   const loadMore = async () => {
     await dispatch(
       GetSpeakers({
-        limit: value?.length ?? 0 + 5,
-        page: Math.ceil((value?.length ?? 0 + 1) / 5),
+        limit: options?.length ?? 0 + 5,
+        page: Math.ceil((options?.length ?? 0 + 1) / 5),
         search: searchText,
       })
     );
@@ -98,12 +97,12 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
         {label}
       </InputLabel>
       <Select
-        labelId={`demo-multiple-chip-${label}`}
-        id="demo-multiple-chip"
+        data-test-id={`menu-select-infinite-scroll-${label}`}
         multiple={multiple}
         value={value || []}
         label={label}
         // size="small"
+
         sx={{
           // minHeight: "46px",
           "& .MuiInputBase-root": {
@@ -111,9 +110,9 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
           },
           "& .MuiInputLabel-root": {
             top: "-4px",
-            "&.MuiInputLabel-shrink": {
-              top: 0,
-            },
+          },
+          "&.MuiInputLabel-shrink": {
+            top: 0,
           },
           borderRadius: "8px",
         }}
@@ -139,7 +138,7 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
           );
         }}
         MenuProps={{
-          autoFocus: false,
+          // autoFocus: false,
           PaperProps: {
             id: "infinite-scroll-select-menu",
             sx: {
@@ -151,14 +150,14 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
               },
             },
           },
-          disableAutoFocus: true,
+          // disableAutoFocus: true,
         }}
       >
         <ListSubheader sx={{ p: 0, lineHeight: "38px", height: "38px" }}>
           <TextField
             data-test-id={`text-infinite-scroll-${label}-search`}
             fullWidth
-            // autoFocus
+            autoFocus
             size="small"
             sx={{
               height: "38px !important",

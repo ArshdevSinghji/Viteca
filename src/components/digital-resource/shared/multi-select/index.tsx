@@ -92,6 +92,8 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                   className={styles.tag}
                   size="small"
                   onDelete={() => {
+                    setIsHovered(false);
+                    setAnchorEl(null);
                     dispatch(
                       setSelectedValue(
                         selectedValue?.slice(0, LIMIT_SIZE) as any[]
@@ -130,6 +132,8 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                 className={styles.tag}
                 size="small"
                 onDelete={() => {
+                  setIsHovered(false);
+                  setAnchorEl(null);
                   dispatch(
                     setSelectedValue(
                       selectedValue?.slice(0, LIMIT_SIZE) as any[]
