@@ -11,7 +11,7 @@ import {
 interface Filter {
   date: {
     publication_date: string | undefined;
-    date_comparison: "gt" | "lt" | "eq";
+    date_comparison: "gt" | "lt" | "eq" | undefined;
   };
   //TODO: add campus
   search: string | undefined;
@@ -32,13 +32,14 @@ interface Filter {
 interface FilterState {
   filter: Filter;
   draft: Filter;
+  count: number;
 }
 
 const initialState: FilterState = {
   filter: {
     date: {
       publication_date: undefined,
-      date_comparison: "eq",
+      date_comparison: undefined,
     },
     //TODO: add campus
     search: undefined,
@@ -58,7 +59,7 @@ const initialState: FilterState = {
   draft: {
     date: {
       publication_date: undefined,
-      date_comparison: "eq",
+      date_comparison: undefined,
     },
     //TODO: add campus
     search: undefined,
@@ -75,6 +76,7 @@ const initialState: FilterState = {
       pageSize: 2,
     },
   },
+  count: 0,
 };
 
 const filterSlice = createSlice({
@@ -85,7 +87,7 @@ const filterSlice = createSlice({
       state.filter = {
         date: {
           publication_date: undefined,
-          date_comparison: "eq",
+          date_comparison: undefined,
         },
         search: undefined,
         authors: undefined,
@@ -104,7 +106,7 @@ const filterSlice = createSlice({
       state.draft = {
         date: {
           publication_date: undefined,
-          date_comparison: "eq",
+          date_comparison: undefined,
         },
         search: undefined,
         authors: undefined,
@@ -120,6 +122,7 @@ const filterSlice = createSlice({
           pageSize: 2,
         },
       };
+      state.count = 0;
     },
 
     closeFilter(state) {
@@ -128,6 +131,31 @@ const filterSlice = createSlice({
 
     applyFilter(state, action: PayloadAction<Filter>) {
       state.filter = action.payload;
+
+      let count = 0;
+
+      const filter = state.filter;
+
+      // if (filter.search !== undefined) count++;
+      if (filter.status !== undefined) count++;
+      if (filter.category !== undefined) count++;
+      if (filter.generated_language !== undefined) count++;
+      if (filter.modality !== undefined) count++;
+
+      if (filter.authors && filter.authors.length > 0) count++;
+      if (filter.audio_languages && filter.audio_languages.length > 0) count++;
+      if (filter.subtitle_languages && filter.subtitle_languages.length > 0)
+        count++;
+      if (filter.subjects && filter.subjects.length > 0) count++;
+
+      if (
+        filter.date.publication_date !== undefined ||
+        filter.date.date_comparison !== undefined
+      ) {
+        count++;
+      }
+
+      state.count = count;
     },
 
     setSelectedCategory(state, action: PayloadAction<Category | undefined>) {
@@ -151,7 +179,10 @@ const filterSlice = createSlice({
     setSelectedDate(state, action: PayloadAction<string | undefined>) {
       state.draft.date.publication_date = action.payload;
     },
-    setDateComparison(state, action: PayloadAction<"gt" | "lt" | "eq">) {
+    setDateComparison(
+      state,
+      action: PayloadAction<"gt" | "lt" | "eq" | undefined>
+    ) {
       state.draft.date.date_comparison = action.payload;
     },
     setStatus(state, action: PayloadAction<Status | undefined>) {

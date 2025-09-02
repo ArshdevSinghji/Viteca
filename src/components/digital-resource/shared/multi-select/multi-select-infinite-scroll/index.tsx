@@ -74,7 +74,20 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
   }
 
   return (
-    <FormControl fullWidth size="small">
+    <FormControl
+      fullWidth
+      sx={{
+        "& .MuiInputBase-root": {
+          height: "45px",
+        },
+        "& .MuiInputLabel-root": {
+          top: "-4px",
+          "&.MuiInputLabel-shrink": {
+            top: 0,
+          },
+        },
+      }}
+    >
       <InputLabel
         id="demo-multiple-chip-label"
         sx={{
@@ -90,9 +103,18 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
         multiple={multiple}
         value={selectedValues}
         label={label}
-        size="small"
+        // size="small"
         sx={{
           // minHeight: "46px",
+          "& .MuiInputBase-root": {
+            height: "45px",
+          },
+          "& .MuiInputLabel-root": {
+            top: "-4px",
+            "&.MuiInputLabel-shrink": {
+              top: 0,
+            },
+          },
           borderRadius: "8px",
         }}
         renderValue={(selected) => {

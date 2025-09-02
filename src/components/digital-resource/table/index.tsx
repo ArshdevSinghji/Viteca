@@ -337,10 +337,10 @@ const Table = () => {
                   color: "#424242 !important",
                 },
               "& .MuiDataGrid-columnHeader:focus": {
-                outline: " none",
+                outline: "none",
               },
               "& .MuiDataGrid-cell:focus": {
-                outline: " none",
+                outline: "none",
               },
               "& .MuiDataGrid-scrollbarFiller": {
                 backgroundColor: "#f5f5f5 !important",
@@ -349,7 +349,6 @@ const Table = () => {
               "& .MuiNativeSelect-root": {
                 border: "1px solid #E0E0E0 !important",
               },
-
               "& .mui-18zjd9i-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input":
                 {
                   display: "flex !important",
@@ -362,6 +361,9 @@ const Table = () => {
                   alignItems: "center !important",
                   color: "#424242",
                 },
+              "& .MuiDataGrid-columnSeparator": {
+                display: "none",
+              },
             }}
             hideFooter={!data}
             paginationModel={paginationModel}

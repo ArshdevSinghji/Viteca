@@ -34,7 +34,18 @@ const MenuSelect: React.FC<MenuSelectProps> = ({
       select
       variant="outlined"
       label={label}
-      size="small"
+      // size="small"
+      sx={{
+        " & .MuiInputBase-root": {
+          height: "45px",
+        },
+        "& .MuiInputLabel-root": {
+          top: "-4px",
+          "&.MuiInputLabel-shrink": {
+            top: 0,
+          },
+        },
+      }}
       slotProps={{
         inputLabel: {
           sx: {

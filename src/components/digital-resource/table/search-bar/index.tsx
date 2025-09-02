@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, Button, IconButton, InputBase, Stack } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Button,
+  IconButton,
+  InputBase,
+  Stack,
+} from "@mui/material";
 
 import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
@@ -21,7 +28,10 @@ const SearchBar = () => {
   const t = useTranslations("Table");
 
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
-  const { search, pagination } = useAppSelector((state) => state.filter.draft);
+  const { search } = useAppSelector((state) => state.filter.draft);
+  const filter = useAppSelector((state) => state.filter.filter);
+
+  const count = useAppSelector((state) => state.filter.count);
 
   const [state, setState] = useState({
     right: false,
@@ -33,14 +43,26 @@ const SearchBar = () => {
       dispatch(
         GetDigitalResource({
           search: value,
+          modality: filter.modality,
+          generated_language: filter.generated_language,
+          category: filter.category,
+          subjects: filter.subjects,
+          status: filter.status,
+          subtitle_languages: filter.subtitle_languages,
+          audio_languages: filter.audio_languages,
+          // campuses: filter.campuses,
+          date_filter: {
+            publication_date: filter.date.publication_date,
+            date_comparison: filter.date.date_comparison,
+          },
           pagination: {
-            page: pagination.page,
-            limit: pagination.pageSize,
+            page: filter.pagination.page || 1,
+            limit: filter.pagination.pageSize || 2,
           },
         })
       );
     }, 300);
-  }, [dispatch]);
+  }, [filter, dispatch]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,8 +70,8 @@ const SearchBar = () => {
         GetDigitalResource({
           search,
           pagination: {
-            page: pagination.page,
-            limit: pagination.pageSize,
+            page: filter.pagination.page,
+            limit: filter.pagination.pageSize,
           },
         })
       );
@@ -131,7 +153,11 @@ const SearchBar = () => {
         </Box>
         <Button
           variant="text"
-          startIcon={<FilterListIcon />}
+          startIcon={
+            <Badge badgeContent={count} color="primary">
+              <FilterListIcon />
+            </Badge>
+          }
           sx={{ color: "#01579b", fontWeight: "600" }}
           onClick={toggleDrawer("right", true)}
         >

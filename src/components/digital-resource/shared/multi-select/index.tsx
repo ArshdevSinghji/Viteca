@@ -155,6 +155,17 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
               },
             },
           }}
+          sx={{
+            " & .MuiInputBase-root": {
+              height: "45px",
+            },
+            "& .MuiInputLabel-root": {
+              top: "3px",
+              "&.MuiInputLabel-shrink": {
+                top: 0,
+              },
+            },
+          }}
         />
       )}
     />

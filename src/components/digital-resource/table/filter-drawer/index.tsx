@@ -31,8 +31,18 @@ export default function FilterDrawer(props: {
   const filterState = useAppSelector((state) => state.filter.draft);
   const dispatch = useAppDispatch();
 
-  const handleClear = () => {
+  const handleClear = async (e: any) => {
     dispatch(clearFilters());
+    await dispatch(
+      GetDigitalResource({
+        search: filterState.search,
+        pagination: {
+          page: filterState.pagination.page || 1,
+          limit: filterState.pagination.pageSize || 2,
+        },
+      })
+    );
+    toggleDrawer("right", false)(e);
   };
 
   const handleClose = (e: any) => {
@@ -99,7 +109,7 @@ export default function FilterDrawer(props: {
         <Box className={styles.button}>
           <Button
             variant="text"
-            onClick={handleClear}
+            onClick={(e) => handleClear(e)}
             disabled={
               !filterState.authors &&
               !filterState.audio_languages &&
