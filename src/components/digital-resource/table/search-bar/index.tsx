@@ -9,21 +9,38 @@ import FilterDrawer from "../filter-drawer";
 import styles from "./search-bar.module.scss";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import { setSearch } from "@/features/filter/filter.slice";
 import { GetDigitalResource } from "@/features/digitial-resources/digital-resources.action";
+import { debounce } from "lodash";
 
 type Anchor = "right";
 
 const SearchBar = () => {
   const t = useTranslations("Table");
 
+  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
   const { search, pagination } = useAppSelector((state) => state.filter.draft);
+
   const [state, setState] = useState({
     right: false,
   });
   const dispatch = useAppDispatch();
+
+  const debounceSearch = useMemo(() => {
+    return debounce(async (value: string | undefined) => {
+      dispatch(
+        GetDigitalResource({
+          search: value,
+          pagination: {
+            page: pagination.page,
+            limit: pagination.pageSize,
+          },
+        })
+      );
+    }, 300);
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +55,7 @@ const SearchBar = () => {
       );
     };
     fetchData();
-  }, [search, dispatch]);
+  }, []);
 
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
@@ -81,13 +98,21 @@ const SearchBar = () => {
             id="search-input"
             name="search"
             placeholder={t("placeholder")}
-            value={search || ""}
-            onChange={(e) => dispatch(setSearch(e.target.value))}
+            value={searchTerm || ""}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              debounceSearch(e.target.value);
+              dispatch(setSearch(e.target.value));
+            }}
             className={styles.input}
             endAdornment={
-              search && (
+              searchTerm && (
                 <CloseIcon
-                  onClick={() => dispatch(setSearch(undefined))}
+                  onClick={() => {
+                    setSearchTerm(undefined);
+                    debounceSearch(undefined);
+                    dispatch(setSearch(undefined));
+                  }}
                   sx={{
                     fontSize: "20px",
                     color: "#424242",
