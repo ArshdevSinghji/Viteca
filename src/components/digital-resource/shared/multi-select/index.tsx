@@ -20,7 +20,7 @@ import {
   Subtitle,
 } from "@/features/digitial-resources/digital-resources.types";
 
-const LIMIT_SIZE = 1;
+const LIMIT_SIZE = 2;
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -54,121 +54,183 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   };
 
   return (
-    <Autocomplete
-      multiple
-      limitTags={LIMIT_SIZE}
-      size="small"
-      id="checkboxes-tags-demo"
-      openOnFocus={false}
-      options={options}
-      disableCloseOnSelect
-      disableClearable
-      value={selectedValue || []}
-      onChange={(event, newValue) => {
-        const uniqueValues = new Set(newValue);
-        dispatch(setSelectedValue(Array.from(uniqueValues) as any[]));
-      }}
-      isOptionEqualToValue={(option, value) => option === value}
-      getOptionLabel={(option) => option ?? ""}
-      renderOption={(props, option, { selected }) => {
-        const { key, ...optionProps } = props;
-        return (
-          <li key={key} {...optionProps} className={styles.option}>
-            <Checkbox
-              icon={icon}
-              checkedIcon={checkedIcon}
-              style={{ marginRight: 8 }}
-              checked={selected}
-              size="small"
-            />
-            {option}
-          </li>
-        );
-      }}
-      sx={{
-        "& .MuiInputBase-root": {
-          borderRadius: "8px",
-        },
-      }}
-      slotProps={{
-        popper: {
-          sx: {
-            "& .MuiPaper-root": {
-              borderRadius: "8px",
+    <Box>
+      <Autocomplete
+        multiple
+        limitTags={LIMIT_SIZE}
+        size="small"
+        id="checkboxes-tags-demo"
+        openOnFocus={false}
+        options={options}
+        disableCloseOnSelect
+        disableClearable
+        value={selectedValue || []}
+        onChange={(event, newValue) => {
+          const uniqueValues = new Set(newValue);
+          dispatch(setSelectedValue(Array.from(uniqueValues) as any[]));
+        }}
+        isOptionEqualToValue={(option, value) => option === value}
+        getOptionLabel={(option) => option ?? ""}
+        renderTags={(tagValue, getTagProps) => {
+          return tagValue.map((option, index) => {
+            if (index < LIMIT_SIZE) {
+              return (
+                <Chip
+                  {...getTagProps({ index })}
+                  key={index}
+                  label={option}
+                  size="small"
+                  className={styles.chip}
+                />
+              );
+            }
+            if (index === LIMIT_SIZE) {
+              return (
+                <Chip
+                  key="more-chip"
+                  label={`+${tagValue.length - LIMIT_SIZE}`}
+                  className={styles.tag}
+                  size="small"
+                  onDelete={() => {
+                    dispatch(
+                      setSelectedValue(
+                        selectedValue?.slice(0, LIMIT_SIZE) as any[]
+                      )
+                    );
+                  }}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  sx={{ cursor: "pointer" }}
+                />
+              );
+            }
+            return null;
+          });
+        }}
+        renderOption={(props, option, { selected }) => {
+          const { key, ...optionProps } = props;
+          return (
+            <li key={key} {...optionProps} className={styles.option}>
+              <Checkbox
+                icon={icon}
+                checkedIcon={checkedIcon}
+                style={{ marginRight: 8 }}
+                checked={selected}
+                size="small"
+              />
+              {option}
+            </li>
+          );
+        }}
+        getLimitTagsText={(more) => {
+          return (
+            <Box>
+              <Chip
+                label={`+${more}`}
+                className={styles.tag}
+                size="small"
+                onDelete={() => {
+                  dispatch(
+                    setSelectedValue(
+                      selectedValue?.slice(0, LIMIT_SIZE) as any[]
+                    )
+                  );
+                }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                sx={{ cursor: "pointer" }}
+              />
+
+              <Popper
+                open={isHovered}
+                anchorEl={anchorEl}
+                placement="bottom"
+                style={{ zIndex: 1600 }}
+              >
+                <ClickAwayListener onClickAway={handleMouseLeave}>
+                  <Box className={styles.popper}>
+                    {selectedValue &&
+                      selectedValue
+                        ?.slice(LIMIT_SIZE)
+                        .map((value, index) => (
+                          <Chip
+                            key={index}
+                            label={value}
+                            className={styles.tag}
+                            size="small"
+                          />
+                        ))}
+                  </Box>
+                </ClickAwayListener>
+              </Popper>
+            </Box>
+          );
+        }}
+        sx={{
+          "& .MuiInputBase-root": {
+            borderRadius: "8px",
+          },
+        }}
+        slotProps={{
+          popper: {
+            sx: {
+              "& .MuiPaper-root": {
+                borderRadius: "8px",
+              },
             },
           },
-        },
-        chip: { size: "small", className: styles.chip },
-      }}
-      getLimitTagsText={(more) => {
-        return (
-          <Box>
-            <Chip
-              label={`+${more}`}
-              className={styles.tag}
-              size="small"
-              onDelete={() => {
-                dispatch(
-                  setSelectedValue(selectedValue?.slice(0, LIMIT_SIZE) as any[])
-                );
-              }}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              sx={{ cursor: "pointer" }}
-            />
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={label}
+            size="small"
+            slotProps={{
+              inputLabel: {
+                sx: {
+                  fontSize: 14,
+                  color: " #9E9E9E",
+                },
+              },
+            }}
+            sx={{
+              " & .MuiInputBase-root": {
+                height: "45px",
+              },
+              "& .MuiInputLabel-root": {
+                top: "3px",
+                "&.MuiInputLabel-shrink": {
+                  top: 0,
+                },
+              },
+            }}
+          />
+        )}
+      />
 
-            <Popper
-              open={isHovered}
-              anchorEl={anchorEl}
-              placement="bottom"
-              style={{ zIndex: 1600 }}
-            >
-              <ClickAwayListener onClickAway={handleMouseLeave}>
-                <Box className={styles.popper}>
-                  {selectedValue &&
-                    selectedValue
-                      ?.slice(LIMIT_SIZE)
-                      .map((value, index) => (
-                        <Chip
-                          key={index}
-                          label={value}
-                          className={styles.tag}
-                          size="small"
-                        />
-                      ))}
-                </Box>
-              </ClickAwayListener>
-            </Popper>
+      <Popper
+        open={isHovered}
+        anchorEl={anchorEl}
+        placement="bottom"
+        style={{ zIndex: 1600 }}
+      >
+        <ClickAwayListener onClickAway={handleMouseLeave}>
+          <Box className={styles.popper}>
+            {selectedValue &&
+              selectedValue
+                ?.slice(LIMIT_SIZE)
+                .map((value, index) => (
+                  <Chip
+                    key={index}
+                    label={value}
+                    className={styles.tag}
+                    size="small"
+                  />
+                ))}
           </Box>
-        );
-      }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label={label}
-          size="small"
-          slotProps={{
-            inputLabel: {
-              sx: {
-                fontSize: 14,
-                color: " #9E9E9E",
-              },
-            },
-          }}
-          sx={{
-            " & .MuiInputBase-root": {
-              height: "45px",
-            },
-            "& .MuiInputLabel-root": {
-              top: "3px",
-              "&.MuiInputLabel-shrink": {
-                top: 0,
-              },
-            },
-          }}
-        />
-      )}
-    />
+        </ClickAwayListener>
+      </Popper>
+    </Box>
   );
 };
 

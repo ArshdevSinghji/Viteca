@@ -154,7 +154,15 @@ const SearchBar = () => {
         <Button
           variant="text"
           startIcon={
-            <Badge badgeContent={count} color="primary">
+            <Badge
+              badgeContent={count}
+              sx={{
+                "& .MuiBadge-badge": {
+                  backgroundColor: "#01579b",
+                  color: "white",
+                },
+              }}
+            >
               <FilterListIcon />
             </Badge>
           }

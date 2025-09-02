@@ -66,12 +66,12 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
     setSearchText("");
   };
 
-  let selectedValues: any = [];
-  if (Array.isArray(value)) {
-    selectedValues = value;
-  } else if (value) {
-    selectedValues = [value];
-  }
+  // let selectedValues: any = [];
+  // if (Array.isArray(value)) {
+  //   selectedValues = value;
+  // } else if (value) {
+  //   selectedValues = [value];
+  // }
 
   return (
     <FormControl
@@ -101,7 +101,7 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
         labelId={`demo-multiple-chip-${label}`}
         id="demo-multiple-chip"
         multiple={multiple}
-        value={selectedValues}
+        value={value || []}
         label={label}
         // size="small"
         sx={{
@@ -120,10 +120,10 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
         renderValue={(selected) => {
           return (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selected.map((value: FilterType) => (
+              {selected.map((value: string) => (
                 <Chip
-                  key={value.key}
-                  label={value.value}
+                  key={value}
+                  label={value}
                   size="small"
                   sx={{
                     fontSize: "11px",
@@ -158,7 +158,7 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
           <TextField
             data-test-id={`text-infinite-scroll-${label}-search`}
             fullWidth
-            autoFocus
+            // autoFocus
             size="small"
             sx={{
               height: "38px !important",
