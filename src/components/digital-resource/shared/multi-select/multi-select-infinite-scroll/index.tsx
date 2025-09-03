@@ -12,7 +12,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -64,6 +64,10 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
   const handleSearchClear = () => {
     setSearchText("");
   };
+
+  useEffect(() => {
+    //fetch subjects thunk
+  }, [searchText]);
 
   // let selectedValues: any = [];
   // if (Array.isArray(value)) {
