@@ -194,6 +194,10 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                 sx: {
                   fontSize: 14,
                   color: " #9E9E9E",
+                  "&.MuiInputLabel-shrink": {
+                    top: 0,
+                    transform: "translate(14px, -9px) scale(0.85) !important",
+                  },
                 },
               },
             }}

@@ -92,6 +92,10 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
         sx={{
           fontSize: 14,
           color: "#9E9E9E",
+          "&.MuiInputLabel-shrink": {
+            top: 0,
+            transform: "translate(14px, -9px) scale(0.85) !important",
+          },
         }}
       >
         {label}
@@ -102,7 +106,6 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
         value={value || []}
         label={label}
         // size="small"
-
         sx={{
           // minHeight: "46px",
           "& .MuiInputBase-root": {
@@ -110,9 +113,6 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
           },
           "& .MuiInputLabel-root": {
             top: "-4px",
-          },
-          "&.MuiInputLabel-shrink": {
-            top: 0,
           },
           borderRadius: "8px",
         }}
