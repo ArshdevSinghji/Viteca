@@ -9,8 +9,11 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { toast } from "sonner";
 import { auth } from "../firebase/firebase-config";
 import { Authenticate } from "@/app/auth/authenticate";
+import { useRouter } from "next/navigation";
 
 const GoogleAuthButton = () => {
+  const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const t = useTranslations("Login");
 
@@ -30,17 +33,16 @@ const GoogleAuthButton = () => {
         refreshToken: response._tokenResponse.refreshToken,
       };
 
-      console.log("userData", userData);
-
       const res = await Authenticate(userData);
 
-      console.log("res", res);
       setLoading(false);
 
       if (res?.error) toast.error(t("error"));
-      else toast.success(t("success"));
+      else {
+        toast.success(t("success"));
+        router.push("/dashboard");
+      }
     } catch (err) {
-      console.log("Google sign-in error: ", err);
       toast.error(t("error"));
       setLoading(false);
     }

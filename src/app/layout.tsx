@@ -27,7 +27,7 @@ export default async function RootLayout({
             <StoreProvider>{children}</StoreProvider>
             <Toaster
               position="top-right"
-              theme="dark"
+              theme="light"
               expand={true}
               duration={2000}
             />

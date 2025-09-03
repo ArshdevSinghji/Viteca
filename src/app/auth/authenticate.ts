@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/app/auth/auth";
+import { signIn, signOut } from "@/app/auth/auth";
 
 export async function Authenticate(userData: {
   email: string;
@@ -33,4 +33,8 @@ export async function Authenticate(userData: {
       error: "Authentication failed",
     };
   }
+}
+
+export async function signOutUser() {
+  await signOut({ redirectTo: "/", redirect: true });
 }

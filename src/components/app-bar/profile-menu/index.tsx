@@ -13,6 +13,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import styles from "./profile-menu.module.scss";
+import { signOutUser } from "@/app/auth/authenticate";
 
 export default function ProfileMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -74,7 +75,15 @@ export default function ProfileMenu() {
               fill="#424242"
             />
           </svg>
-          <Typography>LOG OUT</Typography>
+          <Box
+            component={"button"}
+            className={styles.logoutButton}
+            onClick={() => {
+              signOutUser();
+            }}
+          >
+            LOG OUT
+          </Box>
         </MenuItem>
       </Menu>
     </div>

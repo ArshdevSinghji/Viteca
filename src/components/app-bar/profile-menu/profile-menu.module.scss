@@ -46,11 +46,14 @@
     width: 20px;
     height: 20px;
   }
+}
 
-  p {
-    font-size: 13px;
-    letter-spacing: 0.46px;
-    font-weight: 500;
-    line-height: 22px;
-  }
+.logoutButton {
+  font-size: 13px !important;
+  color: #000000de !important;
+  font-weight: 500 !important;
+
+  outline: none;
+  border: none;
+  background: transparent;
 }
