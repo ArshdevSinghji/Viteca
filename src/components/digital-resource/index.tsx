@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Typography } from "@mui/material";
 import React from "react";
 
@@ -8,6 +10,7 @@ import { useTranslations } from "next-intl";
 
 const DashboardComponent = () => {
   const t = useTranslations("Dashboard");
+
   return (
     <Box className={styles.dashboard}>
       <Typography className={styles.title}>{t("title")}</Typography>

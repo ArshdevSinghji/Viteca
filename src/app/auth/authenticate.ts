@@ -15,14 +15,6 @@ export async function Authenticate(userData: {
       redirect: false,
     });
 
-    // sign in method returns
-    // {
-    //     error: undefined,
-    //     status: 200,
-    //     ok: true,
-    //     url: null
-    // }
-
     return {
       success: !result?.error,
       error: result?.error,

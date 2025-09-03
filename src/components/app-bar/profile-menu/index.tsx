@@ -14,8 +14,11 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import styles from "./profile-menu.module.scss";
 import { signOutUser } from "@/app/auth/authenticate";
+import { getSession } from "@/app/auth/session-token";
+import { Session } from "next-auth";
 
 export default function ProfileMenu() {
+  const [session, setSession] = React.useState<Session | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -25,6 +28,14 @@ export default function ProfileMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  React.useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setSession(session);
+    };
+    fetchSession();
+  }, []);
 
   return (
     <div>
@@ -38,7 +49,7 @@ export default function ProfileMenu() {
         <Box className={styles.icon}>
           <AccountCircleIcon />
         </Box>
-        <Typography className={styles.title}>Admin</Typography>
+        <Typography className={styles.title}>{session?.user?.name}</Typography>
         <KeyboardArrowDownIcon />
       </Stack>
 
@@ -56,9 +67,11 @@ export default function ProfileMenu() {
         sx={{ borderRadius: "8px" }}
       >
         <MenuItem onClick={handleClose} className={styles.userDetails}>
-          <Typography>Admin</Typography>
-          <Tooltip title="Admin123@admin.com">
-            <Typography className={styles.email}>Admin123@admin.com</Typography>
+          <Typography>{session?.user?.name}</Typography>
+          <Tooltip title={session?.user?.email}>
+            <Typography className={styles.email}>
+              {session?.user?.email}
+            </Typography>
           </Tooltip>
         </MenuItem>
         <Divider />

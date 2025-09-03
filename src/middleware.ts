@@ -1,11 +1,11 @@
 import { NextResponse, NextRequest } from "next/server";
-import { getSessionToken } from "./app/auth/session-token";
+import { getSession } from "./app/auth/session-token";
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-  const token = await getSessionToken();
+  const session = await getSession();
+  const token = session?.user?.token;
 
   const url = request.nextUrl;
-  console.log("URL: ", url.pathname);
   if (token && url.pathname === "/") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }

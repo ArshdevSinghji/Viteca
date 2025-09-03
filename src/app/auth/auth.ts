@@ -1,3 +1,4 @@
+import axios from "axios";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
@@ -6,7 +7,25 @@ export const { signIn, signOut, auth } = NextAuth({
     Credentials({
       async authorize(credentials) {
         if (credentials) {
-          return credentials;
+          try {
+            const res = await axios.get(
+              `${process.env.NEXT_PUBLIC_FIREBASE_AUTH_API_URL}/firebase/authentication?token=${credentials.token}`
+            );
+            if (res.data.permissions) {
+              const hasPermission = res.data.permissions.some(
+                (permission: { id: number; name: string }) => {
+                  permission.name === "enters-videos-catalog-app";
+                }
+              );
+              if (hasPermission) {
+                return res.data;
+              }
+            }
+            return null;
+          } catch (error) {
+            console.error("Error fetching Firebase auth:", error);
+            return null;
+          }
         }
         return null;
       },
