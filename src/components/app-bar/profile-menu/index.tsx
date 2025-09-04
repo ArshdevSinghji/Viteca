@@ -18,6 +18,7 @@ import { getSession } from "@/app/auth/session-token";
 import { Session } from "next-auth";
 
 export default function ProfileMenu() {
+  const [width, setWidth] = React.useState<number | undefined>(undefined);
   const [session, setSession] = React.useState<Session | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -67,9 +68,15 @@ export default function ProfileMenu() {
         sx={{ borderRadius: "8px" }}
       >
         <MenuItem onClick={handleClose} className={styles.userDetails}>
-          <Typography>{session?.user?.name}</Typography>
+          <Typography
+            ref={(el) => {
+              setWidth(el?.clientWidth);
+            }}
+          >
+            {session?.user?.name}
+          </Typography>
           <Tooltip title={session?.user?.email}>
-            <Typography className={styles.email}>
+            <Typography className={styles.email} sx={{ maxWidth: width }}>
               {session?.user?.email}
             </Typography>
           </Tooltip>

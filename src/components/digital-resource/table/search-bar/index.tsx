@@ -24,7 +24,7 @@ import { debounce } from "lodash";
 
 type Anchor = "right";
 
-const SearchBar = () => {
+const SearchBar: React.FC<{ hasPermission: boolean }> = ({ hasPermission }) => {
   const t = useTranslations("Table");
 
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
@@ -65,6 +65,7 @@ const SearchBar = () => {
   }, [filter, dispatch]);
 
   useEffect(() => {
+    if (!hasPermission) return;
     const fetchData = async () => {
       await dispatch(
         GetDigitalResource({
@@ -123,6 +124,7 @@ const SearchBar = () => {
             value={searchTerm || ""}
             onChange={(e) => {
               setSearchTerm(e.target.value);
+              if (!hasPermission) return;
               debounceSearch(e.target.value);
               dispatch(setSearch(e.target.value));
             }}
@@ -132,6 +134,7 @@ const SearchBar = () => {
                 <CloseIcon
                   onClick={() => {
                     setSearchTerm(undefined);
+                    if (!hasPermission) return;
                     debounceSearch(undefined);
                     dispatch(setSearch(undefined));
                   }}

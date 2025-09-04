@@ -14,16 +14,25 @@ export const { signIn, signOut, auth } = NextAuth({
             if (res.data.permissions) {
               const hasPermission = res.data.permissions.some(
                 (permission: { id: number; name: string }) => {
-                  permission.name === "enters-videos-catalog-app";
+                  return permission.name === "enters-videos-catalog-app";
                 }
               );
               if (hasPermission) {
-                return res.data;
+                return {
+                  email: credentials.email as string,
+                  name: credentials.name as string,
+                  roles: res.data.roles as { id: number; name: string }[],
+                  permissions: res.data.permissions as {
+                    id: string;
+                    name: string;
+                  }[],
+                  token: credentials.token as string,
+                  refreshToken: credentials.refreshToken as string,
+                };
               }
             }
             return null;
           } catch (error) {
-            console.error("Error fetching Firebase auth:", error);
             return null;
           }
         }
@@ -46,6 +55,7 @@ export const { signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
+        console.log("SESSION USER: ", session.user);
         session.user.roles = token.roles as { id: number; name: string }[];
         session.user.permissions = token.permissions as {
           id: string;

@@ -23,9 +23,13 @@ import {
 } from "@/features/digitial-resources/digital-resources.types";
 import { setPagination } from "@/features/filter/filter.slice";
 import NotFound from "./not-found";
+import { getSession } from "@/app/auth/session-token";
 
 const Table = () => {
   const t = useTranslations("Table");
+
+  const [hasSearchPermission, setHasSearchPermission] =
+    useState<boolean>(false);
 
   const { data } = useAppSelector((state) => state.digitalResources);
   const dispatch = useAppDispatch();
@@ -41,6 +45,19 @@ const Table = () => {
   });
 
   useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      const hasPermission = session?.user?.permissions?.some((permission) => {
+        return permission.name === "search-digital-resources";
+      });
+      setHasSearchPermission(!!hasPermission);
+    };
+    fetchSession();
+  }, []);
+
+  useEffect(() => {
+    if (!hasSearchPermission) return;
+
     const fetchDigitalResource = async () => {
       await dispatch(
         GetDigitalResource({
@@ -294,7 +311,7 @@ const Table = () => {
 
   return (
     <Box className={styles.tableContainer}>
-      <SearchBar />
+      <SearchBar hasPermission={hasSearchPermission} />
       <Box
         sx={{
           width: "100%",
@@ -368,7 +385,7 @@ const Table = () => {
                 outline: "none",
               },
             }}
-            hideFooter={!data}
+            hideFooter={data.length === 0}
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             pageSizeOptions={data && [2, 4, 6]}
