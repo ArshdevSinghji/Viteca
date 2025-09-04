@@ -5,18 +5,19 @@ import React from "react";
 
 const MultiSelectAuthorInfiniteScroll = () => {
   const dispatch = useAppDispatch();
-  const { data, count } = useAppSelector((state) => state.speaker);
+  const { data, total } = useAppSelector((state) => state.speaker);
   const { authors } = useAppSelector((state) => state.filter.draft);
 
-  const onChange = (option: (typeof data)[0]) => {
-    const newOption = option.first_name + " " + option.last_name;
-    dispatch(setSelectedAuthors([...(authors ?? []), newOption]));
+  const onChange = (option: { key: string; value: string }) => {
+    // Check if author is already selected to avoid duplicates
+    if (!authors?.includes(option.value)) {
+      dispatch(setSelectedAuthors([...(authors ?? []), option.value]));
+    }
   };
 
-  const onDelete = (option: (typeof data)[0]) => {
-    const newOption = option.first_name + " " + option.last_name;
+  const onDelete = (authorName: string) => {
     dispatch(
-      setSelectedAuthors(authors?.filter((author) => author !== newOption))
+      setSelectedAuthors(authors?.filter((author) => author !== authorName))
     );
   };
 
@@ -28,7 +29,7 @@ const MultiSelectAuthorInfiniteScroll = () => {
       searchPlaceholder="Search authors..."
       noOptionsText="No authors found"
       options={data}
-      totalOptions={count}
+      totalOptions={total}
       onChange={onChange}
       onDelete={onDelete}
     />

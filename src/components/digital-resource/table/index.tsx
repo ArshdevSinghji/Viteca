@@ -30,6 +30,9 @@ const Table = () => {
 
   const [hasSearchPermission, setHasSearchPermission] =
     useState<boolean>(false);
+  const [role, setRole] = useState<{ id: number; name: string }[] | undefined>(
+    []
+  );
 
   const { data } = useAppSelector((state) => state.digitalResources);
   const dispatch = useAppDispatch();
@@ -51,6 +54,7 @@ const Table = () => {
         return permission.name === "search-digital-resources";
       });
       setHasSearchPermission(!!hasPermission);
+      setRole(session?.user?.roles);
     };
     fetchSession();
   }, []);
@@ -70,7 +74,7 @@ const Table = () => {
     };
     fetchDigitalResource();
     dispatch(setPagination(paginationModel));
-  }, [paginationModel]);
+  }, [paginationModel, hasSearchPermission]);
 
   useEffect(() => {
     if (width < 480) {
@@ -97,9 +101,9 @@ const Table = () => {
             onMouseOver={() => setHoveredRowId(params.row.uuid)}
             onMouseOut={() => setHoveredRowId(null)}
           >
-            {isHovered && params.row.url.play ? (
+            {isHovered && params.row.urls.play ? (
               <video
-                src={params.row.url.play}
+                src={params.row.urls.preview}
                 autoPlay
                 muted
                 loop
@@ -107,7 +111,7 @@ const Table = () => {
               />
             ) : (
               <img
-                src={params.row.url.preview}
+                src={params.row.urls.thumbnail}
                 alt="Preview"
                 className={styles.previewImage}
               />
@@ -136,7 +140,13 @@ const Table = () => {
       minWidth: 200,
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <Chip label={params.row.type} size="small" className={styles.chip} />
+          <Chip
+            label={params.row.type
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, (l: string) => l.toUpperCase())}
+            size="small"
+            className={styles.chip}
+          />
         );
       },
     },
@@ -158,7 +168,7 @@ const Table = () => {
       renderCell: (params: GridRenderCellParams) => {
         return (
           <Box className={styles.text}>
-            <Typography>{params.row.duration}</Typography>
+            <Typography>{params.row.duration || "00:00:00"}</Typography>
           </Box>
         );
       },
@@ -186,7 +196,45 @@ const Table = () => {
       renderCell: (params: GridRenderCellParams) => {
         return (
           <Chip
-            label={params.row.generated_language}
+            label={
+              params.row.generated_language.charAt(0).toUpperCase() +
+              params.row.generated_language.slice(1).toLowerCase()
+            }
+            size="small"
+            className={styles.chip}
+          />
+        );
+      },
+    },
+    {
+      field: "modality",
+      headerName: `${t("modality")}`,
+      flex: 1,
+      minWidth: 128,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <Chip
+            label={
+              params.row.modality.charAt(0).toUpperCase() +
+              params.row.modality.slice(1).toLowerCase()
+            }
+            size="small"
+            className={styles.chip}
+          />
+        );
+      },
+    },
+    {
+      field: "status",
+      headerName: `${t("status")}`,
+      flex: 1,
+      minWidth: 128,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <Chip
+            label={params.row.status
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, (l: string) => l.toUpperCase())}
             size="small"
             className={styles.chip}
           />
@@ -200,7 +248,7 @@ const Table = () => {
       renderCell: (params: GridRenderCellParams) => {
         return (
           <Box className={styles.text}>
-            <Typography>{params.row.created_at}</Typography>
+            <Typography>{params.row.created_at.split("T")[0]}</Typography>
           </Box>
         );
       },
@@ -326,6 +374,32 @@ const Table = () => {
             rows={data}
             columns={columns}
             getRowId={(row) => row.uuid}
+            initialState={{
+              columns: {
+                columnVisibilityModel: {
+                  translation: role?.some((r) => {
+                    return r.name === process.env.NEXT_PUBLIC_AUDIOVISUAL_ROLE;
+                  })
+                    ? false
+                    : true,
+                  authors: role?.some((r) => {
+                    return r.name === process.env.NEXT_PUBLIC_TRANSLATOR_ROLE;
+                  })
+                    ? false
+                    : true,
+                  modality: role?.some((r) => {
+                    return r.name === process.env.NEXT_PUBLIC_ADMIN_ROLE;
+                  })
+                    ? false
+                    : true,
+                  status: role?.some((r) => {
+                    return r.name === process.env.NEXT_PUBLIC_ADMIN_ROLE;
+                  })
+                    ? false
+                    : true,
+                },
+              },
+            }}
             slots={{
               noRowsOverlay: NotFound,
             }}

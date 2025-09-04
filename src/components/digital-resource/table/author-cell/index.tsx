@@ -26,7 +26,7 @@ const AuthorCell: React.FC<{ authors: Speakers[] }> = ({ authors }) => {
     const maxLimitChipArea = limitChipHeight * limitChipWidth;
 
     const maxColumnCellWeight = 226;
-    const maxContainerHeight = 56;
+    const maxContainerHeight = 30;
     const maxArea = maxColumnCellWeight * maxContainerHeight;
 
     const totalChips = allContainerDimensions.slice(0, authors.length);
@@ -76,7 +76,13 @@ const AuthorCell: React.FC<{ authors: Speakers[] }> = ({ authors }) => {
           />
         ))}
         {typeof limit !== "undefined" && authors.length > limit && (
-          <Tooltip title={authors.slice(limit).join(", ")} arrow>
+          <Tooltip
+            title={authors
+              .slice(limit)
+              .map((author) => `${author.first_name} ${author.last_name}`)
+              .join(", ")}
+            arrow
+          >
             <Chip
               label={`+${authors.length - limit}`}
               size="small"

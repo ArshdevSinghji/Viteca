@@ -1,6 +1,8 @@
 import {
   Box,
+  Checkbox,
   Chip,
+  CircularProgress,
   FormControl,
   IconButton,
   InputLabel,
@@ -8,6 +10,7 @@ import {
   ListSubheader,
   MenuItem,
   Select,
+  Stack,
   TextField,
   Tooltip,
   Typography,
@@ -49,12 +52,16 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
   const loadMore = async () => {
     await dispatch(
       GetSpeakers({
-        limit: options?.length ?? 0 + 5,
-        page: Math.ceil((options?.length ?? 0 + 1) / 5),
+        limit: options.length + 2,
+        page: Math.ceil((options.length + 1) / 2),
         search: searchText,
       })
     );
   };
+
+  useEffect(() => {
+    loadMore();
+  }, [searchText]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchText = event.target.value;
@@ -64,10 +71,6 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
   const handleSearchClear = () => {
     setSearchText("");
   };
-
-  useEffect(() => {
-    //fetch subjects thunk
-  }, [searchText]);
 
   // let selectedValues: any = [];
   // if (Array.isArray(value)) {
@@ -121,6 +124,7 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
           borderRadius: "8px",
         }}
         renderValue={(selected) => {
+          console.log({ selected });
           return (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value: string) => (
@@ -214,27 +218,34 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
         </ListSubheader>
 
         <InfiniteScroll
-          dataLength={options.length}
+          dataLength={options?.length || 2}
           next={loadMore}
-          hasMore={options.length < totalOptions}
-          loader={<h4>Loading...</h4>}
-          // endMessage={<p>No more results</p>}
+          hasMore={options?.length < totalOptions}
+          loader={
+            <Stack alignItems="center" justifyContent="center" p={2}>
+              <CircularProgress size="20px" />
+            </Stack>
+          }
+          endMessage={
+            <Typography sx={{ p: 2, textAlign: "center" }}>
+              No more results
+            </Typography>
+          }
+          height={100}
           scrollableTarget="infinite-scroll-select-menu"
         >
-          {options.map((option) => {
-            // const isSelected = selectedValues.some(
-            //   (item: any) => item === option.key
-            // );
+          {options?.map((option) => {
+            const isSelected = value?.some((item: any) => item === option.uuid);
             return (
               <MenuItem
                 key={option.uuid}
                 value={option.first_name + " " + option.last_name}
-                // sx={{
-                //   backgroundColor: isSelected ? "#E8F0FE" : "transparent",
-                //   "&:hover": {
-                //     backgroundColor: !isSelected ? "transparent" : "#E8F0FE",
-                //   },
-                // }}
+                sx={{
+                  backgroundColor: isSelected ? "#E8F0FE" : "transparent",
+                  "&:hover": {
+                    backgroundColor: !isSelected ? "transparent" : "#E8F0FE",
+                  },
+                }}
                 onClick={() =>
                   onChange({
                     key: option.uuid,
@@ -253,12 +264,12 @@ const MultiSelectInfiniteScroll: React.FC<MultiSelectInfiniteScroll> = ({
                     justifyContent: "center",
                   }}
                 >
-                  {/* <Checkbox
-                    data-test-id={`icon-infinite-scroll-${option.key}-menu-${label}`}
+                  <Checkbox
+                    data-test-id={`icon-infinite-scroll-${option.uuid}-menu-${label}`}
                     size="small"
                     checked={isSelected}
                     sx={{ padding: 0 }}
-                  /> */}
+                  />
 
                   <ListItemText
                     primary={

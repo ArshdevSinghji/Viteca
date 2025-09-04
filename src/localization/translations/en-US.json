@@ -14,6 +14,8 @@
     "duration": "Duration",
     "language": "Language",
     "translation": "Translation",
+    "modality": "Modality",
+    "status": "Status",
     "creationDate": "Creation Date",
     "placeholder": "Search by title or description",
     "filters": "Filters",

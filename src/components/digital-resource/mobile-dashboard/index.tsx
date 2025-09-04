@@ -84,7 +84,7 @@ const MobileDashboard = () => {
             >
               <Box className={styles.preview}>
                 <img
-                  src={row.urls.preview}
+                  src={row.urls.thumbnail}
                   alt="Preview"
                   className={styles.previewImage}
                 />

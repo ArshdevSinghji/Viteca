@@ -26,29 +26,64 @@ export default function AnchorTemporaryDrawer(props: {
           <Typography className={styles.drawerTitle}>
             {selectedRow.title}
           </Typography>
+
           <Typography component={"div"} className={styles.drawerBody}>
             <Box>
-              Type: <Chip label={selectedRow.type} size="small" />
+              Type:{" "}
+              <Chip
+                label={selectedRow.type
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                size="small"
+              />
             </Box>
           </Typography>
+
           <Typography component={"div"} className={styles.drawerBody}>
             <Box>
-              Duration: <Chip label={selectedRow.duration} size="small" />
+              Authors:{" "}
+              {selectedRow.speakers.map((speaker) => {
+                return (
+                  <Chip
+                    key={speaker.uuid}
+                    label={`${speaker.first_name} ${speaker.last_name}`}
+                    size="small"
+                    className={styles.chip}
+                    style={{ marginRight: "5px" }}
+                  />
+                );
+              })}
             </Box>
           </Typography>
+
+          <Typography component={"div"} className={styles.drawerBody}>
+            <Box>
+              Duration:{" "}
+              <Chip label={selectedRow.duration || "00:00:00"} size="small" />
+            </Box>
+          </Typography>
+
           <Typography component={"div"} className={styles.drawerBody}>
             <Box>
               Language: <Chip label={selectedRow.main_language} size="small" />
             </Box>
           </Typography>
+
           <Typography component={"div"} className={styles.drawerBody}>
             <Box>
               Translation:{" "}
-              <Chip label={selectedRow.generated_language} size="small" />
+              <Chip
+                label={
+                  selectedRow.generated_language.charAt(0).toUpperCase() +
+                  selectedRow.generated_language.slice(1).toLowerCase()
+                }
+                size="small"
+              />
             </Box>
           </Typography>
+
           <Typography className={styles.drawerBody}>
-            Creation Date: {selectedRow.created_at}
+            Creation Date: {selectedRow.created_at.split("T")[0]}
           </Typography>
         </Box>
       )}

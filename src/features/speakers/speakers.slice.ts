@@ -30,7 +30,13 @@ const initialState: SpeakerState = {
 const SpeakerSlice = createSlice({
   name: "speakerSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    clearSpeakers: (state) => {
+      state.data = [];
+      state.count = 0;
+      state.current_page = 0;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(GetSpeakers.pending, (state) => {
@@ -38,7 +44,14 @@ const SpeakerSlice = createSlice({
       })
       .addCase(GetSpeakers.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.rows;
+        // For infinite scroll, accumulate data instead of replacing
+        if (action.payload.current_page === 1) {
+          // First page - replace data
+          state.data = action.payload.rows;
+        } else {
+          // Subsequent pages - append data
+          state.data = [...state.data, ...action.payload.rows];
+        }
         state.count = action.payload.count;
         state.per_page = action.payload.per_page;
         state.total = action.payload.total;
@@ -50,4 +63,5 @@ const SpeakerSlice = createSlice({
   },
 });
 
+export const { clearSpeakers } = SpeakerSlice.actions;
 export default SpeakerSlice.reducer;

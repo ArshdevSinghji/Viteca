@@ -13,6 +13,8 @@
     "duration": "Duración",
     "language": "Idioma",
     "translation": "Traducción",
+    "modality": "Modalidad",
+    "status": "Estado",
     "creationDate": "Fecha de creación",
     "placeholder": "Buscar por título o descripción",
     "filters": "Filtros",
